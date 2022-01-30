@@ -8,7 +8,8 @@ var express = require('express')
 var app = express();
 
 var corsOptions = {
-  origin: "http://localhost:3000"
+  origin: 'https://main.dk7q11eybhlt4.amplifyapp.com/',
+  optionsSuccessStatus: 200 
 };
 
 var orderID = 1;
