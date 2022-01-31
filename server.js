@@ -5,7 +5,7 @@ var fs = require("fs");
 var https = require("https")
 
 var express = require('express')
-var app = express();
+var app = express().use('*', cors());
 
 /*
 var corsOptions = {
@@ -21,12 +21,14 @@ app.use(express.json());
 // parse requests of content-type - application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }));
 
+/*
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization, Upgrade-Insecure-Requests");
   res.header('Access-Control-Allow-Methods', 'PUT, POST, GET, DELETE, OPTIONS');
   next();
 });
+*/
 
 // simple route
 app.get("/", (req, res) => {
