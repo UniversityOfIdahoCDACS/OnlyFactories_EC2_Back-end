@@ -7,13 +7,13 @@ var https = require("https")
 var express = require('express')
 var app = express();
 
+/*
 var corsOptions = {
   origin: "http://localhost:3000"
 };
 
-var orderID = 1;
-
 app.use(cors(corsOptions));
+*/
 
 // parse requests of content-type - application/json
 app.use(express.json());
