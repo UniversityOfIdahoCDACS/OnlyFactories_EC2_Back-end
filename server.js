@@ -46,7 +46,6 @@ app.get('/api/tracking/:id', (req, res) => {
 //Query Start for finding MAX orderID.  
 app.get('/api/getMaxOrderID', (req, res) => {
 
-  if(orderID != null){
     connection.query(`SELECT MAX(orderID) from FactoryOrders`, function(err,results,fields){
       if(err) throw err;
 
@@ -54,7 +53,6 @@ app.get('/api/getMaxOrderID', (req, res) => {
       res.json(results);
       return;
     });
-  }
 })
 //Query END
 
