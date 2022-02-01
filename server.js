@@ -21,14 +21,33 @@ app.use(express.json());
 // parse requests of content-type - application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }));
 
+var allowCrossDomain = function(req,res,next){
+	res.header("Access-Control-Allow-Origin", "*");
+	res.header("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE, OPTIONS");
+	res.header("Access-control-Headers", "Content-Type, Origin, X-Requested-With, Accept, Authorization, Upgrade-Insecure-Requests");
+	next();
+}
+
+app.use(allowCrossDomain);
+
 /*
 app.use(function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Allow-Control-Allow-Credentials", "true");
+  res.header("Access-Control-Allow-Origin", "http://localho.st");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization, Upgrade-Insecure-Requests");
   res.header('Access-Control-Allow-Methods', 'PUT, POST, GET, DELETE, OPTIONS');
-  next();
+  //next();
+
+ if(req.method == "OPTIONS"){
+	 return res.status(200).end();
+ }
+
+ return next();
 });
 */
+
+//app.use(cors({origin:true, credentials:true}));
+
 
 // simple route
 app.get("/", (req, res) => {
@@ -87,6 +106,6 @@ https.createServer({
 	key: fs.readFileSync("/etc/letsencrypt/live/onlyfactories.duckdns.org/privkey.pem"),
 	cert: fs.readFileSync("/etc/letsencrypt/live/onlyfactories.duckdns.org/cert.pem"),
 	},
-	app).listen(PORT, function(){
+	app).listen(PORT,  function(){
 		console.log("Running on port 3306");
 });
