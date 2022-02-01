@@ -7,14 +7,6 @@ var https = require("https")
 var express = require('express')
 var app = express().use('*', cors());
 
-/*
-var corsOptions = {
-  origin: "http://localhost:3000"
-};
-
-app.use(cors(corsOptions));
-*/
-
 // parse requests of content-type - application/json
 app.use(express.json());
 
@@ -29,25 +21,6 @@ var allowCrossDomain = function(req,res,next){
 }
 
 app.use(allowCrossDomain);
-
-/*
-app.use(function(req, res, next) {
-  res.header("Allow-Control-Allow-Credentials", "true");
-  res.header("Access-Control-Allow-Origin", "http://localho.st");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization, Upgrade-Insecure-Requests");
-  res.header('Access-Control-Allow-Methods', 'PUT, POST, GET, DELETE, OPTIONS');
-  //next();
-
- if(req.method == "OPTIONS"){
-	 return res.status(200).end();
- }
-
- return next();
-});
-*/
-
-//app.use(cors({origin:true, credentials:true}));
-
 
 // simple route
 app.get("/", (req, res) => {
