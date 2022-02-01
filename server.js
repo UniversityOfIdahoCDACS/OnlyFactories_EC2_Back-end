@@ -56,6 +56,19 @@ app.get('/api/getMaxOrderID', (req, res) => {
 })
 //Query END
 
+//Query Start for finding MAX transactionID.  
+app.get('/api/getMaxTransactionID', (req, res) => {
+
+  connection.query(`SELECT MAX(transactionID) as transactionID from FactoryOrders`, function(err,results,fields){
+    if(err) throw err;
+
+    console.log(results);
+    res.json(results);
+    return;
+  });
+})
+//Query END
+
 //Query Start for creating an order. 
 app.post('/api/ordering', (req, res) => {
   
