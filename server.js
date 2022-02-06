@@ -45,24 +45,28 @@ app.get('/api/tracking/:id', (req, res) => {
 
 //Query Start for finding an Order by orderID.
 app.get('/api/orderQuantities/:dataRange', (req, res) => {
-  const dateRange = req.params.dataRange;
+  const dateRange = req.params.dataRange
   
-  let currentDate = new Date();
+  let currentDate = new Date()
   let endDate = currentDate.getFullYear() + '-' + (currentDate.getMonth()+1) + '-'
                   + currentDate.getDate() + ' ' + currentDate.getHours() + ':'
-                  + currentDate.getMinutes() + ':' + currentDate.getSeconds();
+                  + currentDate.getMinutes() + ':' + currentDate.getSeconds()
+
+  currentDate.setDate(currentDate.getDate() - dateRange)
 
   let beginDate = currentDate.getFullYear() + '-' + (currentDate.getMonth()+1) + '-'
-  + (currentDate.getDate()-dateRange) + ' ' + currentDate.getHours() + ':'
-  + currentDate.getMinutes() + ':' + currentDate.getSeconds();
+                  + currentDate.getDate() + ' ' + currentDate.getHours() + ':'
+                  + currentDate.getMinutes() + ':' + currentDate.getSeconds()
 
   if(dateRange != null){
-    connection.query(`SELECT SUM(quantityRED) FROM FactoryOrders WHERE created_at BETWEEN \"${beginDate.toString()}\" AND \"${endDate.toString()}\"`, function(err,results,fields){
-      if(err) throw err;
+    connection.query(`SELECT SUM(quantityRED) AS numRed, SUM(quantityBLUE) AS numBlue, SUM(quantityWHITE) AS numWhite FROM FactoryOrders WHERE created_at BETWEEN \"${beginDate}\" AND \"${endDate}\"`, function(err,results,fields){
+      if(err) throw err
 
-      console.log(results);
-      res.json(results);
+      console.log(results)
+      //console.log(beginDate)
+      res.json(results)
       return;
+      
     });
   }
 })
