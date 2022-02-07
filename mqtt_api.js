@@ -61,3 +61,17 @@ app.get('/mqtt/cancelByOrderId', (req, res) => {
   }
 })
 // END
+
+// update the inventory when mqtt listener receives an inventory update
+app.put('/mqtt/updateInventory', (req, res) => {
+  console.log('Update Inventory Call');
+})
+// END
+
+// update status of Job when mqtt listener receives update of jobID
+app.put('/mqtt/updateJobStatus/:job_id', (req, res) => {
+  job_ID = req.params.job_id;
+
+  console.log(job_ID);
+})
+// END
