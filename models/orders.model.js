@@ -7,29 +7,15 @@ const FactoryOrder = function(factoryorder) {
     this.email = factoryorder.email;
     this.orderStatus = factoryorder.orderStatus;
     this.transactionID = factoryorder.transactionID;
-    this.qualityRED = factoryorder.qualityRED;
-    this.qualityBLUE = factoryorder.qualityBLUE;
-    this.qualityWHITE = factoryorder.qualityWHITE;
+    this.quantityRED = factoryorder.quantityRED;
+    this.quantityBLUE = factoryorder.quantityBLUE;
+    this.quantityWHITE = factoryorder.quantityWHITE;
     this.created_at = factoryorder.created_at;
     this.updated_at = factoryorder.updated_at;
 };
 
-FactoryOrder.create = (newFactoryOrder, result) =>{
-    sql.query("INSERT INTO FactoryOrders SET ?", newFactoryOrder, (err, res) => {
-        if (err) {
-            console.log("error: ", err);
-            result(err, null);
-            return;
-        }
-
-        console.log("Created order: ", {id: res.insertId, ...newFactoryOrder});
-        result(null, { id: res.insertId, ...newFactoryOrder });
-
-    });
-};
-
-FactoryOrder.findByID = (id, result) => {
-    sql.query(`SELECT * FROM FactoryOrders WHERE id = ${id}`, (er, res) => {
+FactoryOrder.findById = (id, result) => {
+    sql.query(`SELECT * FROM FactoryOrders WHERE orderID = ${id}`, (err, res) => {
         if (err) {
             console.log("error: ", err);
             result(err, null);
@@ -48,24 +34,84 @@ FactoryOrder.findByID = (id, result) => {
     });
 };
 
-FactoryOrder.getAll = (orderID, result) => {
-    let query = "SELECT * FROM FactoryOrders";
+FactoryOrder.orderQuantities = (dataRange, result) => {
+    let currentDate = new Date();
+    let endDate = currentDate.getFullYear() + '-' + (currentDate.getMonth()+1) + '-'
+                    + currentDate.getDate() + ' ' + currentDate.getHours() + ':'
+                    + currentDate.getMinutes() + ':' + currentDate.getSeconds();
 
-    if(orderID){
-        query += `WHERE orderID LIKE '%${orderID}%'`;
-    }
+    currentDate.setDate(currentDate.getDate() - dataRange);
 
-    sql.query(query, (err, res) => {
-        if (err) {
+    let beginDate = currentDate.getFullYear() + '-' + (currentDate.getMonth()+1) + '-'
+                    + currentDate.getDate() + ' ' + currentDate.getHours() + ':'
+                    + currentDate.getMinutes() + ':' + currentDate.getSeconds();
+
+    sql.query(`SELECT SUM(quantityRED) AS numRed, SUM(quantityBLUE) AS numBlue, SUM(quantityWHITE) AS numWhite FROM FactoryOrders WHERE created_at BETWEEN \"${beginDate}\" AND \"${endDate}\"`, (err,res) => {
+        if (err){
             console.log("error: ", err);
-            result(null, err);
+            result(err, null);
             return;
         }
 
-        console.log("Orders: ", res);
-        result(null, res);
+        if(res.length){
+            console.log("Found order quantities");
+            result(null, res);
+            return;
+        }
+
+        result({ kind: "order quantities not found"}, null);
+    });
+};
+
+FactoryOrder.getMaxOrderID = (result) => {
+    sql.query(`SELECT MAX(orderID) as orderID from FactoryOrders`, (err, res) => {
+        if (err){
+            console.log("error: ", err);
+            result(err, null);
+            return;
+        }
+
+        if(res.length){
+            console.log("Found Max OrderID: ", res[0]);
+            result(null, res[0]);
+            return;
+        }
+
+        result({ kind: "max OrderID not found"}, null);
+    });
+};
+
+FactoryOrder.getMaxTransactionID = (result) => {
+    sql.query(`SELECT MAX(transactionID) as transactionID from FactoryOrders`, (err,res) => {
+        if (err){
+            console.log("error: ", err);
+            result(err, null);
+            return;
+        }
+
+        if(res.length){
+            console.log("Found Max TransactionID: ", res[0]);
+            result(null, res[0]);
+            return;
+        }
+        
+        //no orders were found
+        result({ kind: "max TransactionID not found"}, null);
+    });
+};
+
+FactoryOrder.createOrder = (newFactoryOrder, result) =>{
+    sql.query("INSERT INTO FactoryOrders SET ?", newFactoryOrder, (err, res) => {
+        if (err) {
+            console.log("error: ", err);
+            result(err, null);
+            return;
+        }
+
+        console.log("Created order: ", {id: res.insertId, ...newFactoryOrder});
+        result(null, { id: res.insertId, ...newFactoryOrder });
+
     });
 };
 
 module.exports = FactoryOrder;
-
