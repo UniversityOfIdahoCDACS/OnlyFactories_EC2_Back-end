@@ -43,6 +43,35 @@ app.get('/api/tracking/:id', (req, res) => {
 })
 //Query END
 
+//Query Start for finding an Order by orderID.
+app.get('/api/orderQuantities/:dataRange', (req, res) => {
+  const dateRange = req.params.dataRange
+  
+  let currentDate = new Date()
+  let endDate = currentDate.getFullYear() + '-' + (currentDate.getMonth()+1) + '-'
+                  + currentDate.getDate() + ' ' + currentDate.getHours() + ':'
+                  + currentDate.getMinutes() + ':' + currentDate.getSeconds()
+
+  currentDate.setDate(currentDate.getDate() - dateRange)
+
+  let beginDate = currentDate.getFullYear() + '-' + (currentDate.getMonth()+1) + '-'
+                  + currentDate.getDate() + ' ' + currentDate.getHours() + ':'
+                  + currentDate.getMinutes() + ':' + currentDate.getSeconds()
+
+  if(dateRange != null){
+    connection.query(`SELECT SUM(quantityRED) AS numRed, SUM(quantityBLUE) AS numBlue, SUM(quantityWHITE) AS numWhite FROM FactoryOrders WHERE created_at BETWEEN \"${beginDate}\" AND \"${endDate}\"`, function(err,results,fields){
+      if(err) throw err
+
+      console.log(results)
+      //console.log(beginDate)
+      res.json(results)
+      return;
+      
+    });
+  }
+})
+//Query END
+
 //Query Start for finding MAX orderID.  
 app.get('/api/getMaxOrderID', (req, res) => {
 
@@ -97,7 +126,7 @@ app.post('/api/ordering', (req, res) => {
 
 //probably move all routing queries to this location in the future, 
 //as API expands
-require("../NodeJS/routes/orders.routes.js")(app);
+require("./routes/orders.routes.js")(app);
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -117,6 +146,7 @@ https.createServer({
 });
 
 
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 //     TO RUN EXPRESS SERVER LOCALLY, UNCOMMENT CODE BELOW AND COMMENT OUT LISTEN ABOVE
@@ -125,7 +155,7 @@ https.createServer({
 
 /*
 // set port, listen for requests
-const PORT = process.env.PORT || 3306;
+const PORT = 3306;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}.`);
 });
