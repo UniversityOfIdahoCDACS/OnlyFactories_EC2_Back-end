@@ -28,12 +28,34 @@ MQTT.sendNewJob = (id, result) => {
     
 };
 
-MQTT.cancelByJobId = (dataRange, result) => {
+MQTT.cancelByJobId = (jobID, result) => {
     
+    let msg_type = 'cancel_job_id';
+    let job_id = orderID;
+
+    // Publish over MQTT if payload isn't empty and client is connected
+    if (job_id){
+        if client.connected == true{
+        // need to verify what qos we want, testing with qos=1 here which would verify that
+        //the Python subscriber received the messaged atleast once
+        client.publish(topic, {msg_type, payload}, qos=1);
+        }
+    }
 };
 
-MQTT.cancelByOrderId = (result) => {
-    
+MQTT.cancelByOrderId = (orderID,result) => {
+
+    let msg_type = 'cancel_order_id';
+    let order_id = orderID;
+
+    // Publish over MQTT if payload isn't empty and client is connected
+    if (orderID){
+        if client.connected == true{
+        // need to verify what qos we want, testing with qos=1 here which would verify that
+        //the Python subscriber received the messaged atleast once
+        client.publish(topic, {msg_type, payload}, qos=1);
+        }
+    }
 };
 
 MQTT.updateInventory = (result) => {
