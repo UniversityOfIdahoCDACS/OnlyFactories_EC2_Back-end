@@ -8,6 +8,7 @@ var express = require('express')
 var app = express().use('*', cors());
 
 var factoryRouter = require("./routes/orders.routes.js");
+var mqttRouter = require("./routes/mqtt.routes.js");
 
 
 // parse requests of content-type - application/json
@@ -24,8 +25,10 @@ var allowCrossDomain = function(req,res,next){
 }
 
 app.use(allowCrossDomain);
+
+// Routes for order API and MQTT API
 app.use('/api', factoryRouter);
-//app.use('/mqtt', mqttRouter);
+app.use('/mqtt', mqttRouter);
 
 // simple route
 app.get("/", (req, res) => {
