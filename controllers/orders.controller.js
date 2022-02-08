@@ -1,7 +1,71 @@
 const FactoryOrder = require("../models/orders.model.js");
 
+exports.findById = (req, res) => {
+  FactoryOrder.findById(req.params.id, (err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          message: `Not found FactoryOrder with id ${req.params.id}.`
+        });
+      } else {
+        res.status(500).send({
+          message: "Error retrieving FactoryOrder with id " + req.params.id
+        });
+      }
+    } else res.send(data);
+  });
+}
+
+exports.orderQuantities = (req, res) => {
+  FactoryOrder.orderQuantities(req.params.dataRange, (err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          message: `Not orders found in Date Range.`
+        });
+      } else {
+        res.status(500).send({
+          message: "Error retrieving orders in date range " + req.params.dataRange
+        });
+      }
+    } else res.send(data);
+  });
+}
+
+exports.getMaxOrderID = (req, res) => {
+  FactoryOrder.getMaxOrderID((err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          message: `Max order ID not found.`
+        });
+      } else {
+        res.status(500).send({
+          message: "Error retrieving Max order id."
+        });
+      }
+    } else res.send(data);
+  });
+}
+
+exports.getMaxTransactionID = (req, res) => {
+  FactoryOrder.getMaxTransactionID((err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          message: `No Orders Found.`
+        });
+      } else {
+        res.status(500).send({
+          message: "Error retrieving Max Transaction ID"
+        });
+      }
+    } else res.send(data);
+  });
+}
+
 // Create and Save a new FactoryOrder
-exports.create = (req, res) => {
+exports.createOrder = (req, res) => {
   // Validate request
   if (!req.body) {
       res.status(400).send({
@@ -18,11 +82,13 @@ exports.create = (req, res) => {
       transactionID: req.body.transactionID, 
       quantityRED: req.body.quantityRED,
       quantityBLUE: req.body.quantityBLUE,
-      quantityWHITE: req.body.quantityWHITE
+      quantityWHITE: req.body.quantityWHITE,
+      created_at : req.body.created_at,
+      updated_at : req.body.updated_at
   });
 
   //Save FactoryOrder in database
-  FactoryOrder.create(factoryorder, (err, data) => {
+  FactoryOrder.createOrder(factoryorder, (err, data) => {
       if(err) {
           res.status(500).send({
               message:
@@ -33,49 +99,3 @@ exports.create = (req, res) => {
   });
 
 };
-
-// Retrieve all FactoryOrders from the database (with condition).
-exports.findAll = (req, res) => {
-    const orderID = req.query.orderID;
-
-  Tutorial.getAll(orderID, (err, data) => {
-    if (err)
-      res.status(500).send({
-        message:
-          err.message || "Some error occurred while retrieving FactoryOrders."
-      });
-    else res.send(data);
-  });
-};
-
-// Find a single FactoryOrder with a id
-exports.findOne = (req, res) => {
-    FactoryOrder.findById(req.params.id, (err, data) => {
-        if (err) {
-          if (err.kind === "not_found") {
-            res.status(404).send({
-              message: `Not found FactoryOrder with id ${req.params.id}.`
-            });
-          } else {
-            res.status(500).send({
-              message: "Error retrieving FactoryOrder with id " + req.params.id
-            });
-          }
-        } else res.send(data);
-      });
-};
-
-/*// Update a FactoryOrder identified by the id in the request
-exports.update = (req, res) => {
-  
-};
-
-// Delete a FactoryOrder with the specified id in the request
-exports.delete = (req, res) => {
-  
-};
-
-// Delete all FactoryOrders from the database.
-exports.deleteAll = (req, res) => {
-  
-};*/
