@@ -1,16 +1,26 @@
 // models for mqtt
 
 const sql = require("./db.js");
+const mqtt = require("mqtt");
+const url = 'wss://onlyfactories.duckdns.org:9001';
 
 //Constructor
-const MQTT_Task = function(newInventory) {
-    
-    this.quantityRED = newInventory.quantityRED;
-    this.quantityBLUE = newInventory.quantityBLUE;
-    this.quantityWHITE = newInventory.quantityWHITE;
+
+const MQTT_Task = function(params) {
+
+    this.jobID = params.jobID;
+    this.orderID = params.orderID;
+    this.disk_color = params.disk_color;
+    this.jobStatus = params.jobStatus;    
 };
 
-MQTT.addJobToDB = (newFactoryJob, result) =>{
+const MQTT_Msg = function(params){
+    this.msg_type = params.msg;
+    this.payload = params.payload;
+}
+
+MQTT_Task.addJobToDB = (newFactoryJob, result) =>{
+
     sql.query("INSERT INTO FactoryJobs SET ?", newFactoryJob, (err, res) => {
         if (err) {
             console.log("error: ", err);
@@ -18,48 +28,36 @@ MQTT.addJobToDB = (newFactoryJob, result) =>{
             return;
         }
 
-        console.log("Created order: ", {id: res.insertId, ...newFactoryJob});
-        result(null, { id: res.insertId, ...newFactoryJob });
+        console.log("Created order: ", {id: res.jobID, ...newFactoryJob});
+        result(null, { id: res.jobID, ...newFactoryJob });
 
     });
 };
 
-MQTT.sendNewJob = (id, result) => {
-    
+MQTT_Msg.sendNewJob = (newFactoryJob, result) => {
+    let client = mqtt.connect(url);
+    console.log(newFactoryJob);
+    const payload = JSON.stringify(newFactoryJob);
+
+    client.on("connect", function(){        
+        console.log(payload);
+        //client.publish('UofICapstone_Cloud', payload, qos=1);
+        client.publish('UofICapstone_Cloud_test', payload, qos=1);
+    })
+
+    result(null, payload);
 };
 
-MQTT.cancelByJobId = (jobID, result) => {
+MQTT_Task.cancelByJobId = (jobID, result) => {
     
     let msg_type = 'cancel_job_id';
-    let job_id = orderID;
-
-    // Publish over MQTT if payload isn't empty and client is connected
-    if (job_id){
-        if client.connected == true{
-        // need to verify what qos we want, testing with qos=1 here which would verify that
-        //the Python subscriber received the messaged atleast once
-        client.publish(topic, {msg_type, payload}, qos=1);
-        }
-    }
-};
-
-MQTT.cancelByOrderId = (orderID,result) => {
-
-    let msg_type = 'cancel_order_id';
-    let order_id = orderID;
-
-    // Publish over MQTT if payload isn't empty and client is connected
-    if (orderID){
-        if client.connected == true{
-        // need to verify what qos we want, testing with qos=1 here which would verify that
-        //the Python subscriber received the messaged atleast once
-        client.publish(topic, {msg_type, payload}, qos=1);
-        }
-    }
-};
-
-MQTT.updateInventory = (result) => {
     
 };
 
-module.exports = MQTT_Task;
+MQTT_Task.cancelByOrderId = (orderID,result) => {
+
+    let msg_type = 'cancel_order_id';
+   
+};
+
+module.exports = {MQTT_Task, MQTT_Msg};

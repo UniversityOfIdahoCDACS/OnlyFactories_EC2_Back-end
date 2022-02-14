@@ -16,6 +16,9 @@ router.get("/getMaxOrderID", orders.getMaxOrderID);
 // get Max transaction ID
 router.get('/getMaxTransactionID', orders.getMaxTransactionID);
 
+// get Max Job ID
+router.get('/getMaxJobID', orders.getMaxJobID);
+
 //Query for creating an order
 router.post('/ordering', orders.createOrder);
 

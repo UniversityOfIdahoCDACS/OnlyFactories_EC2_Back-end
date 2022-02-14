@@ -1,41 +1,61 @@
 // controller for mqtt
-
-const MQTT_Task = require("../models/mqtt.model.js");
+const {MQTT_Task, MQTT_Msg} = require("../models/mqtt.models.js");
 
 exports.addJobToDB = (req, res) => {
-    MQTT.addJobToDB(req.params.id, (err, data) => {
-      if (err) {
-        if (err.kind === "not_found") {
-          res.status(404).send({
-            message: `Not found FactoryOrder with id ${req.params.id}.`
-          });
-        } else {
-          res.status(500).send({
-            message: "Error retrieving FactoryOrder with id " + req.params.id
-          });
-        }
-      } else res.send(data);
+
+  if(!req.body){
+    res.status(400).send({
+      message: "Content can not be empty!"
     });
   }
 
-exports.sendNewJob = (req, res) => {
-  MQTT.sendNewJob(req.params.id, (err, data) => {
-    if (err) {
-      if (err.kind === "not_found") {
-        res.status(404).send({
-          message: `Not found FactoryOrder with id ${req.params.id}.`
-        });
-      } else {
-        res.status(500).send({
-          message: "Error retrieving FactoryOrder with id " + req.params.id
-        });
-      }
-    } else res.send(data);
+  const newFactoryJob = new MQTT_Task({
+    jobID: req.body.jobID,
+    orderID: req.body.orderID,
+    disk_color: req.body.disk_color,
+    jobStatus: req.body.jobStatus
   });
+
+  MQTT_Task.addJobToDB(newFactoryJob, (err, data) => {
+      if(err) {
+          res.status(500).send({
+              message:
+                err.message || "Some error occured while creating the job."
+          });
+      }
+      else res.send(data);
+  });
+};
+
+exports.sendNewJob = (req, res) => {
+
+  if(!req.body){
+      res.status(400).send({
+        message: "Content can not be empty!"
+      });
+  }
+
+  const newFactoryJob = new MQTT_Msg({
+    msg_type: req.body.msg_type,
+    payload: {
+        jobID: req.body.payload.jobID,
+        orderID: req.body.payload.orderID,
+        color: req.body.payload.color,
+        cook_time: req.body.payload.cook_time,
+        slice: req.body.payload.slice, 
+    }
+  });
+
+  console.log(newFactoryJob);
+
+  MQTT_Msg.sendNewJob(newFactoryJob, (err, data) => {
+    res.send(data);
+  });
+
 }
 
 exports.cancelByJobId = (req, res) => {
-    MQTT.cancelByJobId(req.params.dataRange, (err, data) => {
+  MQTT_Task.cancelByJobId(req.params.dataRange, (err, data) => {
     if (err) {
       if (err.kind === "not_found") {
         res.status(404).send({
@@ -51,7 +71,7 @@ exports.cancelByJobId = (req, res) => {
 }
 
 exports.cancelByOrderId = (req, res) => {
-    MQTT.cancelByOrderId((err, data) => {
+  MQTT_Task.cancelByOrderId((err, data) => {
     if (err) {
       if (err.kind === "not_found") {
         res.status(404).send({
@@ -65,35 +85,3 @@ exports.cancelByOrderId = (req, res) => {
     } else res.send(data);
   });
 }
-
-
-// Create and Save a new FactoryOrder
-exports.updateInventory = (req, res) => {
-  // Validate request
-  if (!req.body) {
-      res.status(400).send({
-          message: "Content can not be empty!"
-      });
-  }
-
-  //Create a FactoryOrder
-  const newInventory = new MQTT_Task({
-      
-      quantityRED: req.body.quantityRED,
-      quantityBLUE: req.body.quantityBLUE,
-      quantityWHITE: req.body.quantityWHITE,
-
-  });
-
-  //Save FactoryOrder in database
-  MQTT.updateInventory(newInventory, (err, data) => {
-      if(err) {
-          res.status(500).send({
-              message:
-                err.message || "Some error occured while creating the order."
-          });
-      }
-      else res.send(data);
-  });
-
-};

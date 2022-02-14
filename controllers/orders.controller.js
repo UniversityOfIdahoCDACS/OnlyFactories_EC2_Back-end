@@ -64,6 +64,23 @@ exports.getMaxTransactionID = (req, res) => {
   });
 }
 
+exports.getMaxJobID = (req, res) => {
+  FactoryOrder.getMaxJobID((err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          message: `No Orders Found.`
+        });
+      } else {
+        res.status(500).send({
+          message: "Error retrieving Max Job ID"
+        });
+      }
+    } else res.send(data);
+  });
+}
+
+
 // Create and Save a new FactoryOrder
 exports.createOrder = (req, res) => {
   // Validate request

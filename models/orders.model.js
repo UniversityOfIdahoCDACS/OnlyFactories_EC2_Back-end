@@ -100,6 +100,25 @@ FactoryOrder.getMaxTransactionID = (result) => {
     });
 };
 
+FactoryOrder.getMaxJobID = (result) => {
+    sql.query(`SELECT MAX(jobID) as jobID from FactoryJobs`, (err,res) => {
+        if (err){
+            console.log("error: ", err);
+            result(err, null);
+            return;
+        }
+
+        if(res.length){
+            console.log("Found Max JobID: ", res[0]);
+            result(null, res[0]);
+            return;
+        }
+        
+        //no orders were found
+        result({ kind: "max JobID not found"}, null);
+    });
+};
+
 FactoryOrder.createOrder = (newFactoryOrder, result) =>{
     sql.query("INSERT INTO FactoryOrders SET ?", newFactoryOrder, (err, res) => {
         if (err) {
@@ -108,8 +127,8 @@ FactoryOrder.createOrder = (newFactoryOrder, result) =>{
             return;
         }
 
-        console.log("Created order: ", {id: res.insertId, ...newFactoryOrder});
-        result(null, { id: res.insertId, ...newFactoryOrder });
+        console.log("Created order: ", {id: res.orderID, ...newFactoryOrder});
+        result(null, { id: res.orderID, ...newFactoryOrder });
 
     });
 };
