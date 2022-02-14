@@ -42,7 +42,7 @@ MQTT_Msg.sendNewJob = (newFactoryJob, result) => {
     client.on("connect", function(){        
         console.log(payload);
         //client.publish('UofICapstone_Cloud', payload, qos=1);
-        client.publish('UofICapstone_Cloud_test', payload, qos=1);
+        client.publish('UofICapstone_Cloud', payload, qos=1);
     })
 
     result(null, payload);
