@@ -39,7 +39,7 @@ exports.sendNewJob = (req, res) => {
     msg_type: req.body.msg_type,
     payload: {
         job_id: req.body.payload.jobID,
-        orderID: req.body.payload.orderID,
+        order_id: req.body.payload.orderID,
         color: req.body.payload.color,
         cook_time: req.body.payload.cook_time,
         slice: req.body.payload.slice, 
