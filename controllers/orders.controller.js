@@ -1,5 +1,4 @@
-const FactoryOrder = require("../models/orders.model.js");
-const FactoryTransaction = require("../models/orders.model.js");
+const {FactoryOrder, FactoryTransaction} = require("../models/orders.model.js");
 
 exports.findById = (req, res) => {
   FactoryOrder.findById(req.params.id, (err, data) => {
@@ -118,6 +117,8 @@ exports.createTransaction = (req, res) => {
       ccExp: req.body.ccExp,
       orderTotal: req.body.orderTotal
   });
+
+  console.log(factorytransaction);
 
   //Save FactoryOrder in database
   FactoryTransaction.createTransaction(factorytransaction, (err, data) => {

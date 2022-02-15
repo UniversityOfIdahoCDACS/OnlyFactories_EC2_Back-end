@@ -137,4 +137,4 @@ FactoryTransaction.createTransaction = (newFactoryTransaction, result) =>{
     });
 };
 
-module.exports = FactoryOrder, FactoryTransaction;
+module.exports = {FactoryOrder, FactoryTransaction};
