@@ -14,6 +14,15 @@ const FactoryOrder = function(factoryorder) {
     this.updated_at = factoryorder.updated_at;
 };
 
+//Constructor for FactoryTransaction
+const FactoryTransaction = function(factorytransaction) {
+    this.orderID = factorytransaction.orderID;
+    this.transactionID = factorytransaction.transactionID;
+    this.ccNumber = factorytransaction.ccNumber;
+    this.ccExp = factorytransaction.ccExp;
+    this.orderTotal = factorytransaction.orderTotal;
+};
+
 FactoryOrder.findById = (id, result) => {
     sql.query(`SELECT * FROM FactoryOrders WHERE orderID = ${id}`, (err, res) => {
         if (err) {
@@ -133,4 +142,18 @@ FactoryOrder.createOrder = (newFactoryOrder, result) =>{
     });
 };
 
-module.exports = FactoryOrder;
+FactoryTransaction.createTransaction = (newFactoryTransaction, result) =>{
+    sql.query("INSERT INTO Transactions SET ?", newFactoryTransaction, (err, res) => {
+        if (err) {
+            console.log("error: ", err);
+            result(err, null);
+            return;
+        }
+
+        console.log("Created transaction: ", {id: res.orderID, ...newFactoryTransaction});
+        result(null, { id: res.orderID, ...newFactoryTransaction });
+
+    });
+};
+
+module.exports = {FactoryOrder, FactoryTransaction};
