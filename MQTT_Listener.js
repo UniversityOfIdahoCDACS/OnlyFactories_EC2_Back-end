@@ -119,7 +119,7 @@ client.on('message', function(topic, message){
             let jobID = msg.job_id;
             let jobStatus = msg.job_notice;
             let orderID;
-            let jobStatus;
+            let jobStatuses;
             let numRows;
 
             // update the jobStatus for specified jobID
@@ -139,9 +139,8 @@ client.on('message', function(topic, message){
                         console.log("error: ",err);
                     }
 
-                    orderID = res;
+                    orderID = res[0].orderID;
                 });
-                console.log('ORDER_ID: ',orderID);
 
                 // get jobStatuses for matching orderID
                 sql.query(`SELECT jobStatus FROM FactoryJobs WHERE orderID=${orderID}`, (err, res) =>{
@@ -150,17 +149,14 @@ client.on('message', function(topic, message){
                     }
 
                     numRows = res.length;
-                    jobStatus = res;
-                });
-                console.log('JOB_STATUS: ',jobStatus);
-                
+                    jobStatuses = res;
+                });                
 
                 let allJobsCompleted = true;
-                console.log(msg);
 
                 // iterate through all rows returned by previous query checking for complete status
                 for(let i = 0; i < newRows; i++){
-                    if( jobStatus[i] != 'complete'){
+                    if( jobStatuses[i].jobStatus != 'complete'){
                         allJobsCompleted = false;
                     }
                 }
