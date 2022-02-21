@@ -55,7 +55,7 @@ FactoryOrder.orderQuantities = (dataRange, result) => {
                     + currentDate.getDate() + ' ' + currentDate.getHours() + ':'
                     + currentDate.getMinutes() + ':' + currentDate.getSeconds();
 
-    sql.query(`SELECT sum(CASE WHEN quantityRED > 0 THEN quantityRED ELSE 0 END) AS numRed, sum(CASE WHEN quantityBLUE > 0 THEN quantityBLUE ELSE 0 END) AS numBlue, sum(CASE WHEN quantityWHITE > 0 THEN quantityWHITE ELSE 0 END) AS numWhite, sum(CASE WHEN orderStatus = "Created" THEN 1 ELSE 0 END) AS inQue,sum(CASE WHEN orderStatus = "Completed" THEN 1 ELSE 0 END) AS completed FROM FactoryOrders WHERE created_at BETWEEN \"${beginDate}\" AND \"${endDate}\"`, (err,res) => {
+    sql.query(`SELECT sum(CASE WHEN quantityRED > 0 THEN quantityRED ELSE 0 END) AS numRed, sum(CASE WHEN quantityBLUE > 0 THEN quantityBLUE ELSE 0 END) AS numBlue, sum(CASE WHEN quantityWHITE > 0 THEN quantityWHITE ELSE 0 END) AS numWhite, sum(CASE WHEN orderStatus = "Created" THEN 1 ELSE 0 END) AS inQue, sum(CASE WHEN orderStatus = "Completed" THEN 1 ELSE 0 END) AS completed, count(orderStatus) AS totalOrders FROM FactoryOrders WHERE created_at BETWEEN \"${beginDate}\" AND \"${endDate}\"`, (err,res) => {
         if (err){
             console.log("error: ", err);
             result(err, null);
