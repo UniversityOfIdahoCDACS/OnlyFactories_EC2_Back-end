@@ -1,4 +1,4 @@
-const FactoryOrder = require("../models/orders.model.js");
+const {FactoryOrder, FactoryTransaction} = require("../models/orders.model.js");
 
 exports.findById = (req, res) => {
   FactoryOrder.findById(req.params.id, (err, data) => {
@@ -115,4 +115,37 @@ exports.createOrder = (req, res) => {
       else res.send(data);
   });
 
-};
+}
+
+// Create and Save a new FactoryTransaction
+exports.createTransaction = (req, res) => {
+  // Validate request
+  if (!req.body) {
+      res.status(400).send({
+          message: "Content can not be empty!"
+      });
+  }
+
+  //Create a FactoryOrder
+  const factorytransaction = new FactoryTransaction({
+      orderID: req.body.orderID,
+      transactionID: req.body.transactionID, 
+      ccNumber: req.body.ccNumber,
+      ccExp: req.body.ccExp,
+      orderTotal: req.body.orderTotal
+  });
+
+  console.log(factorytransaction);
+
+  //Save FactoryOrder in database
+  FactoryTransaction.createTransaction(factorytransaction, (err, data) => {
+      if(err) {
+          res.status(500).send({
+              message:
+                err.message || "Some error occured while creating the tranaction."
+          });
+      }
+      else res.send(data);
+  });
+
+}

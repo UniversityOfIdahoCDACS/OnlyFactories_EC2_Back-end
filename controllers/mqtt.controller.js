@@ -38,8 +38,8 @@ exports.sendNewJob = (req, res) => {
   const newFactoryJob = new MQTT_Msg({
     msg_type: req.body.msg_type,
     payload: {
-        jobID: req.body.payload.jobID,
-        orderID: req.body.payload.orderID,
+        job_id: req.body.payload.jobID,
+        order_id: req.body.payload.orderID,
         color: req.body.payload.color,
         cook_time: req.body.payload.cook_time,
         slice: req.body.payload.slice, 

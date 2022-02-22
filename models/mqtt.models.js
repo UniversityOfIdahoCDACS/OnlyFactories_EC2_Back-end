@@ -15,7 +15,7 @@ const MQTT_Task = function(params) {
 };
 
 const MQTT_Msg = function(params){
-    this.msg_type = params.msg;
+    this.msg_type = params.msg_type;
     this.payload = params.payload;
 }
 
@@ -42,7 +42,7 @@ MQTT_Msg.sendNewJob = (newFactoryJob, result) => {
     client.on("connect", function(){        
         console.log(payload);
         //client.publish('UofICapstone_Cloud', payload, qos=1);
-        client.publish('UofICapstone_Cloud', payload, qos=1);
+        client.publish('UofICapstone_Cloud', payload, qos=2);
     })
 
     result(null, payload);

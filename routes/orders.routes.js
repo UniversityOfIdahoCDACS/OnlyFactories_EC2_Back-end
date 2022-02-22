@@ -22,4 +22,7 @@ router.get('/getMaxJobID', orders.getMaxJobID);
 //Query for creating an order
 router.post('/ordering', orders.createOrder);
 
+//Query for creating an transaction for an order
+router.post('/transactions', orders.createTransaction);
+
 module.exports = router
