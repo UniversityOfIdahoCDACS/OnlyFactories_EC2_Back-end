@@ -10,6 +10,10 @@ router.get("/tracking/:id", orders.findById);
 // Get order quantities for selected length of time
 router.get('/orderQuantities/:dataRange', orders.orderQuantities);
 
+// Check Username and Password
+router.get('/checkLogin/:data', orders.checkLogin);
+
+
 // Get Max order ID
 router.get("/getMaxOrderID", orders.getMaxOrderID);
 

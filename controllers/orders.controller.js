@@ -1,4 +1,4 @@
-const {FactoryOrder, FactoryTransaction} = require("../models/orders.model.js");
+const {FactoryOrder, FactoryTransaction, LogIn} = require("../models/orders.model.js");
 
 exports.findById = (req, res) => {
   FactoryOrder.findById(req.params.id, (err, data) => {
@@ -26,6 +26,22 @@ exports.orderQuantities = (req, res) => {
       } else {
         res.status(500).send({
           message: "Error retrieving orders in date range " + req.params.dataRange
+        });
+      }
+    } else res.send(data);
+  });
+}
+
+exports.checkLogin = (req, res) => {
+  LogIn.checkLogin(req.params.data, (err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          message: `Failed Login`
+        });
+      } else {
+        res.status(500).send({
+          message: "Falied Login " + req.params.data
         });
       }
     } else res.send(data);
