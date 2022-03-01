@@ -23,6 +23,12 @@ const FactoryTransaction = function(factorytransaction) {
     this.orderTotal = factorytransaction.orderTotal;
 };
 
+//Constructor for LogIn
+const LogIn = function(login) {
+    this.UserName = login.UserName;
+    this.Password = login.Password;
+};
+
 FactoryOrder.findById = (id, result) => {
     sql.query(`SELECT * FROM FactoryOrders WHERE orderID = ${id}`, (err, res) => {
         if (err) {
@@ -69,6 +75,28 @@ FactoryOrder.orderQuantities = (dataRange, result) => {
         }
 
         result({ kind: "order quantities not found"}, null);
+    });
+};
+
+LogIn.checkLogin = (data, result) => {
+    var user = data.substring(0, data.indexOf(':'));
+    var pass = data.substring(data.indexOf(':')+1, data.length);
+
+    sql.query(`SELECT BINARY UserName = "${user}" AND BINARY Password = "${pass}" AS checkLogIn FROM LogIn;`, (err, res) => {
+        if (err) {
+            console.log("error: ", err);
+            result(err, null);
+            return;
+        }
+
+        if (res.length){
+            //console.log("UserName:", user, "\nPassword:" , pass);
+            result(null, res);
+            return;
+        }
+
+        result({ kind: "not_found"}, null);
+
     });
 };
 
@@ -156,4 +184,4 @@ FactoryTransaction.createTransaction = (newFactoryTransaction, result) =>{
     });
 };
 
-module.exports = {FactoryOrder, FactoryTransaction};
+module.exports = {FactoryOrder, FactoryTransaction, LogIn};
