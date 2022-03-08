@@ -170,9 +170,10 @@ client.on('message', function(topic, message){
                     if(allJobsCompleted){
 
                         let updateOrder = {
-                            orderStatus = 'Complete';
-                            updated_at = getTimestamp();
-                        }
+                            orderStatus: 'Complete',
+                            updated_at: getTimestamp()
+                        };
+
                         sql.query(`UPDATE FactoryOrders SET ? WHERE orderID=${orderID}`, updateOrder, (err, res) =>{
                             if (err){
                                 console.log("error: ", err);
