@@ -1,4 +1,4 @@
-const {FactoryOrder, FactoryTransaction} = require("../models/orders.model.js");
+const {FactoryOrder, FactoryTransaction, LogIn, ItemPrice} = require("../models/orders.model.js");
 
 exports.findById = (req, res) => {
   FactoryOrder.findById(req.params.id, (err, data) => {
@@ -32,6 +32,54 @@ exports.orderQuantities = (req, res) => {
   });
 }
 
+exports.getDaysQ = (req, res) => {
+  FactoryOrder.getDaysQ((err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          message: `Not orders found in Date Range.`
+        });
+      } else {
+        res.status(500).send({
+          message: "Error retrieving orders in date range"
+        });
+      }
+    } else res.send(data);
+  });
+}
+
+exports.checkLogin = (req, res) => {
+  LogIn.checkLogin(req.params.data, (err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          message: `Failed Login`
+        });
+      } else {
+        res.status(500).send({
+          message: "Falied Login " + req.params.data
+        });
+      }
+    } else res.send(data);
+  });
+}
+
+exports.checkPrice = (req, res) => {
+  ItemPrice.checkPrice((err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          message: `Failed Price Check`
+        });
+      } else {
+        res.status(500).send({
+          message: "Failed Price Check " + req.params.data
+        });
+      }
+    } else res.send(data);
+  });
+}
+
 exports.getMaxOrderID = (req, res) => {
   FactoryOrder.getMaxOrderID((err, data) => {
     if (err) {
@@ -58,6 +106,22 @@ exports.getMaxTransactionID = (req, res) => {
       } else {
         res.status(500).send({
           message: "Error retrieving Max Transaction ID"
+        });
+      }
+    } else res.send(data);
+  });
+}
+
+exports.getMaxJobID = (req, res) => {
+  FactoryOrder.getMaxJobID((err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          message: `No Orders Found.`
+        });
+      } else {
+        res.status(500).send({
+          message: "Error retrieving Max Job ID"
         });
       }
     } else res.send(data);
