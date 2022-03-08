@@ -13,6 +13,11 @@ router.get('/orderQuantities/:dataRange', orders.orderQuantities);
 // Check Username and Password
 router.get('/checkLogin/:data', orders.checkLogin);
 
+// Check Prices
+router.get('/checkPrice', orders.checkPrice);
+
+// Check Qunatity per day
+router.get('/getDaysQ', orders.getDaysQ);
 
 // Get Max order ID
 router.get("/getMaxOrderID", orders.getMaxOrderID);
