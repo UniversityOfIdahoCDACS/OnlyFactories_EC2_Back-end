@@ -109,6 +109,25 @@ FactoryOrder.getMaxTransactionID = (result) => {
     });
 };
 
+FactoryOrder.getPrices = (result) => {
+    sql.query("SELECT cust_price FROM ItemPrice", (err, res) => {
+        if (err){
+            console.log("error: ", err);
+            result(err, null);
+            return;
+        }
+
+        if(res.length){
+            console.log("Found Max TransactionID: ", res);
+            result(null, res);
+            return;
+        }
+        
+        //no orders were found
+        result({ kind: "max TransactionID not found"}, null);
+    });
+};
+
 FactoryOrder.createOrder = (newFactoryOrder, result) =>{
     sql.query("INSERT INTO FactoryOrders SET ?", newFactoryOrder, (err, res) => {
         if (err) {
