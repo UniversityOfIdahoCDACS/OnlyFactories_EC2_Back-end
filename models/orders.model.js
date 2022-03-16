@@ -85,27 +85,33 @@ FactoryOrder.orderQuantities = (dataRange, result) => {
     });
 };
 
-FactoryOrder.getDaysQ = (result) => {
+FactoryOrder.getDaysQ = (day, result) => {
+    let m = day.substring(0, day.indexOf('-'));
+    let d = day.substring(day.indexOf('-')+1, day.length);
+
     let currentDate = new Date();
-    let day1 = currentDate.getFullYear() + '-' + (currentDate.getMonth()+1) + '-' + currentDate.getDate()
+    currentDate.setMonth(m);
+    currentDate.setDate(d);
+
+    let day1 = currentDate.getFullYear() + '-' + (currentDate.getMonth()) + '-' + currentDate.getDate()
 
     currentDate.setDate(currentDate.getDate() - 1);
-    let day2 = currentDate.getFullYear() + '-' + (currentDate.getMonth()+1) + '-' + currentDate.getDate();
+    let day2 = currentDate.getFullYear() + '-' + (currentDate.getMonth()) + '-' + currentDate.getDate();
 
     currentDate.setDate(currentDate.getDate() - 1);
-    let day3 = currentDate.getFullYear() + '-' + (currentDate.getMonth()+1) + '-' + currentDate.getDate()
+    let day3 = currentDate.getFullYear() + '-' + (currentDate.getMonth()) + '-' + currentDate.getDate()
 
     currentDate.setDate(currentDate.getDate() - 1);
-    let day4 = currentDate.getFullYear() + '-' + (currentDate.getMonth()+1) + '-' + currentDate.getDate()
+    let day4 = currentDate.getFullYear() + '-' + (currentDate.getMonth()) + '-' + currentDate.getDate()
 
     currentDate.setDate(currentDate.getDate() - 1);
-    let day5 = currentDate.getFullYear() + '-' + (currentDate.getMonth()+1) + '-' + currentDate.getDate()
+    let day5 = currentDate.getFullYear() + '-' + (currentDate.getMonth()) + '-' + currentDate.getDate()
 
     currentDate.setDate(currentDate.getDate() - 1);
-    let day6 = currentDate.getFullYear() + '-' + (currentDate.getMonth()+1) + '-' + currentDate.getDate()
+    let day6 = currentDate.getFullYear() + '-' + (currentDate.getMonth()) + '-' + currentDate.getDate()
 
     currentDate.setDate(currentDate.getDate() - 1);
-    let day7 = currentDate.getFullYear() + '-' + (currentDate.getMonth()+1) + '-' + currentDate.getDate()
+    let day7 = currentDate.getFullYear() + '-' + (currentDate.getMonth()) + '-' + currentDate.getDate()
 
 
     sql.query(`SELECT * FROM ( SELECT sum(quantityRED) AS numRed1, sum(quantityBLUE) AS numBlue1, sum(quantityWHITE) AS numWhite1 FROM FactoryOrders WHERE created_at BETWEEN '${day1} 00:00:00' AND '${day1} 23:59:59')d1 CROSS JOIN ( SELECT sum(quantityRED) AS numRed2, sum(quantityBLUE) AS numBlue2, sum(quantityWHITE) AS numWhite2 FROM FactoryOrders WHERE created_at BETWEEN '${day2} 00:00:00' AND '${day2} 23:59:59')d2 CROSS JOIN ( SELECT sum(quantityRED) AS numRed3, sum(quantityBLUE) AS numBlue3, sum(quantityWHITE) AS numWhite3 FROM FactoryOrders WHERE created_at BETWEEN '${day3} 00:00:00' AND '${day3} 23:59:59')d3 CROSS JOIN ( SELECT sum(quantityRED) AS numRed4, sum(quantityBLUE) AS numBlue4, sum(quantityWHITE) AS numWhite4 FROM FactoryOrders WHERE created_at BETWEEN '${day4} 00:00:00' AND '${day4} 23:59:59')d4 CROSS JOIN ( SELECT sum(quantityRED) AS numRed5, sum(quantityBLUE) AS numBlue5, sum(quantityWHITE) AS numWhite5 FROM FactoryOrders WHERE created_at BETWEEN '${day5} 00:00:00' AND '${day5} 23:59:59')d5 CROSS JOIN ( SELECT sum(quantityRED) AS numRed6, sum(quantityBLUE) AS numBlue6, sum(quantityWHITE) AS numWhite6 FROM FactoryOrders WHERE created_at BETWEEN '${day6} 00:00:00' AND '${day6} 23:59:59')d6 CROSS JOIN ( SELECT sum(quantityRED) AS numRed7, sum(quantityBLUE) AS numBlue7, sum(quantityWHITE) AS numWhite7 FROM FactoryOrders WHERE created_at BETWEEN '${day7} 00:00:00' AND '${day7} 23:59:59')d7;`, (err, res) => {
