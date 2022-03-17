@@ -33,7 +33,7 @@ exports.orderQuantities = (req, res) => {
 }
 
 exports.getDaysQ = (req, res) => {
-  FactoryOrder.getDaysQ((err, data) => {
+  FactoryOrder.getDaysQ(req.params.day, (err, data) => {
     if (err) {
       if (err.kind === "not_found") {
         res.status(404).send({

@@ -17,7 +17,7 @@ router.get('/checkLogin/:data', orders.checkLogin);
 router.get('/checkPrice', orders.checkPrice);
 
 // Check Qunatity per day
-router.get('/getDaysQ', orders.getDaysQ);
+router.get('/getDaysQ/:day', orders.getDaysQ);
 
 // Get Max order ID
 router.get("/getMaxOrderID", orders.getMaxOrderID);
