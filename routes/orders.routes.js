@@ -28,6 +28,9 @@ router.get('/getMaxTransactionID', orders.getMaxTransactionID);
 // get Max Job ID
 router.get('/getMaxJobID', orders.getMaxJobID);
 
+// get the orderID the factory is processing
+router.get('/getFactoryOrderID', orders.getFactoryOrderID);
+
 //Get item pricing per unit
 router.get("/itemPrices/", orders.getPrices);
 

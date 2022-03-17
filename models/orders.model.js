@@ -230,6 +230,25 @@ FactoryOrder.getMaxJobID = (result) => {
     });
 };
 
+FactoryOrder.getFactoryOrderID = (result) => {
+    sql.query(`SELECT current_job from FactoryStatus`, (err,res) => {
+        if (err){
+            console.log("error: ", err);
+            result(err, null);
+            return;
+        }
+
+        if(res.length){
+            console.log("Found orderID: ", res[0]);
+            result(null, res[0]);
+            return;
+        }
+        
+        //no orders were found
+        result({ kind: "current_job not found"}, null);
+    });
+};
+
 FactoryOrder.getPrices = (result) => {
     sql.query("SELECT cust_price FROM ItemPrice", (err, res) => {
         if (err){
