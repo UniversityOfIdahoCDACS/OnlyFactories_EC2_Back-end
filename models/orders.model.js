@@ -298,7 +298,7 @@ FactoryTransaction.createTransaction = (newFactoryTransaction, result) =>{
 
 // get last webcam frame
 FactoryOrder.getWebcamFrame = (result) =>{
-    sql.query("SELECT image from Webcam", (err, res) => {
+    sql.query("SELECT image_data FROM Webcam", (err, res) => {
         if(err){
             console.log("error: ", err);
             result(err, null);
