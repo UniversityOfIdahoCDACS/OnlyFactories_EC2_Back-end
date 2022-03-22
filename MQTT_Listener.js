@@ -230,7 +230,7 @@ client.on('message', function(topic, message){
                 }
             });
 
-            console.log("Webcam Frame updated")
+            //console.log("Webcam Frame updated")
         }
     }
 });
