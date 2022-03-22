@@ -1,4 +1,3 @@
-const reader = new FileReader();
 const {FactoryOrder, FactoryTransaction, LogIn, ItemPrice} = require("../models/orders.model.js");
 
 exports.findById = (req, res) => {
@@ -245,13 +244,18 @@ exports.getWebcamFrame = (req, res) => {
       }
     } else {
       console.log("Data.image_data: ",data.image_data);
-      //var reader = new FileReader();
-      reader.readAsDataURL(data.image_data);
-      var imageResult = reader.result;
+
+
+      //////////////////////////////////////////////////////
+      // Need to figure out how to properly decode Images
+      ////////////////////////////////////////////////////////
+
+
+
+
 
       //const imgData = Buffer(data.image_data, 'base64');
-      console.log("Reader.result: ", imageResult);
-      res.type('jpeg').send(imageResult);
+      res.type('jpeg').send(data.image_data);
     }
   });
 }
