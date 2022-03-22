@@ -14,6 +14,7 @@ client.on('connect', function(){
     client.subscribe('Factory/Inventory');                      // listen for messages about inventory
     client.subscribe('Factory/Status');                         // listen for messages about factory status
     client.subscribe('Factory/Job_notice');                     // listen for messages about Job updates
+    client.subscribe('Factory/Webcam');		                // Get webcam frames	
 
     console.log('Client has subscribed successfully');
 })
@@ -210,7 +211,7 @@ client.on('message', function(topic, message){
         //
         // If webcam frame is received
         //
-        if(topic === 'Factory/Webcam'){
+        if(topic == 'Factory/Webcam'){
 
             //when frame received, convert from base 64 to raw binary in buffer
             //let buff = Buffer.from(msg.image, 'base64');
