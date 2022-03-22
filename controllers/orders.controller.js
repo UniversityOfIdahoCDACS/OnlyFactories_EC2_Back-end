@@ -243,8 +243,10 @@ exports.getWebcamFrame = (req, res) => {
         });
       }
     } else {
+      console.log("Data.image_data: ",data.image_data);
 
       const imgData = Buffer(data.image_data, 'base64');
+      console.log("imgData: ", imgData);
       res.type('jpeg').send(imgData);
     }
   });
