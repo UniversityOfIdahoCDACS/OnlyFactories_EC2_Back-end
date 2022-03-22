@@ -1,4 +1,4 @@
-const read = require("body-parser/lib/read");
+const reader = new FileReader();
 const {FactoryOrder, FactoryTransaction, LogIn, ItemPrice} = require("../models/orders.model.js");
 
 exports.findById = (req, res) => {
@@ -245,12 +245,13 @@ exports.getWebcamFrame = (req, res) => {
       }
     } else {
       console.log("Data.image_data: ",data.image_data);
-      var reader = new FileReader();
+      //var reader = new FileReader();
       reader.readAsDataURL(data.image_data);
+      var imageResult = reader.result;
 
       //const imgData = Buffer(data.image_data, 'base64');
-      console.log("Reader.result: ", reader.result);
-      res.type('jpeg').send(reader.result);
+      console.log("Reader.result: ", imageResult);
+      res.type('jpeg').send(imageResult);
     }
   });
 }
