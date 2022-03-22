@@ -214,12 +214,12 @@ client.on('message', function(topic, message){
         if(topic == 'Factory/Webcam'){
 
             //when frame received, convert from base 64 to raw binary in buffer
-            //let buff = Buffer.from(msg.image, 'base64');
+            let buff = Buffer.from(msg.image, 'base64');
             
             // create obj with image_data as base64
             let webcamFrame = {
                 webcam_status: msg.webcam_status,
-                image_data: msg.image_data,
+                image_data: buff,
                 updated_at: getTimestamp()
             };
 

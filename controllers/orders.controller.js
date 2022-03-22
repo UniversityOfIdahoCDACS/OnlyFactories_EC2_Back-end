@@ -244,8 +244,8 @@ exports.getWebcamFrame = (req, res) => {
       }
     } else {
 
-      const imgData = Buffer.from(data.image_data, 'base64');
-      res.type('jpeg').send(imgData);
+      //const imgData = Buffer.from(data.image_data, 'base64');
+      res.type('jpeg').send(data);
     }
   });
 }
