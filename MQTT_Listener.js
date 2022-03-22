@@ -39,7 +39,7 @@ function getTimestamp(dateRange){
 client.on('message', function(topic, message){
 
     //if ordar status message is received
-    if(topic === 'Factory/Echo'){
+    if(topic == 'Factory/Echo'){
         console.log("Echo message Received")
         console.log(message)
     }
