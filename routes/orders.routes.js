@@ -40,4 +40,7 @@ router.post('/ordering', orders.createOrder);
 //Query for creating an transaction for an order
 router.post('/transactions', orders.createTransaction);
 
+// get webcam frame
+router.get('/getWebcamFrame', orders.getWebcamFrame);
+
 module.exports = router

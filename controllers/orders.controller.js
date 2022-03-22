@@ -228,3 +228,24 @@ exports.createTransaction = (req, res) => {
   });
 
 }
+
+// get last webcam frame
+exports.getWebcamFrame = (req, res) => {
+  FactoryOrder.getWebcamFrame((err, data) => {
+    if(err){
+      if(err.kind === "not_found"){
+        res.status(404).send({
+          message: "No frame found"
+        });
+      } else{
+        res.status(500).send({
+          message: "Error retrieving frame"
+        });
+      }
+    } else {
+
+      const imgData = Buffer.from(data.image, 'base64');
+      res.type('png').send(imgData);
+    }
+  });
+}

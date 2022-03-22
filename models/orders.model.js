@@ -296,4 +296,24 @@ FactoryTransaction.createTransaction = (newFactoryTransaction, result) =>{
     });
 };
 
+// get last webcam frame
+FactoryOrder.getWebcamFrame = (result) =>{
+    sql.query("SELECT image from Webcam", (err, res) => {
+        if(err){
+            console.log("error: ", err);
+            result(err, null);
+            return;
+        }
+
+        if(res.length){
+
+            console.log("Found Webcam Frame: ");
+            result(null, res[0]);
+            return;
+        }
+
+        result({kind: "no frame found"}, null);
+    })
+}
+
 module.exports = {FactoryOrder, FactoryTransaction, LogIn, ItemPrice};

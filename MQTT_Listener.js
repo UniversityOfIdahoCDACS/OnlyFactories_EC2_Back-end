@@ -136,6 +136,29 @@ client.on('message', function(topic, message){
                     console.log(`JobID ${jobID} Status updated`);
                 });
 
+                // if job is in progress, update main order
+                if(msg.job_notice =='In progress'){
+                    // get orderID of job notice
+                    sql.query(`SELECT orderID FROM FactoryJobs WHERE jobID = ${jobID}`, (err, res) =>{
+                        if (err){
+                            console.log("error: ",err);
+                        }
+
+                        orderID = res[0].orderID;
+                    });
+
+                    let updateOrder = {
+                        orderStatus: 'In progress',
+                        updated_at: getTimestamp()
+                    };
+
+                    sql.query(`UPDATE FactoryOrders SET ? WHERE orderID=${orderID}`, updateOrder, (err, res) =>{
+                        if (err){
+                            console.log("error: ", err);
+                        }
+                    });
+                }
+
                 // if job status is complete, check if all jobs in order are complete
                 if(msg.job_notice == 'Complete'){
                     // get orderID of job notice
@@ -182,6 +205,31 @@ client.on('message', function(topic, message){
                     }
                 }
             }
+        }
+
+        //
+        // If webcam frame is received
+        //
+        if(topic === 'Factory/Webcam'){
+
+            //when frame received, convert from base 64 to raw binary in buffer
+            //let buff = Buffer.from(msg.image, 'base64');
+            
+            // create obj with image_data as base64
+            let webcamFrame = {
+                webcam_status: msg.webcam_status,
+                image_data: msg.image_data,
+                updated_at: getTimestamp()
+            };
+
+            // update webcam image as blob in mysql
+            sql.query(`UPDATE Webcam SET ?`, webcamFrame, (err, res) => {
+                if(err){
+                    console.log("Error: ", err);
+                }
+            });
+
+            console.log("Webcam Frame updated")
         }
     }
 });
