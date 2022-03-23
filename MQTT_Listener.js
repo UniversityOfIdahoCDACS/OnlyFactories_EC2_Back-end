@@ -218,7 +218,7 @@ client.on('message', function(topic, message){
             let buff = Buffer.from(msg.image_data, 'base64');
 
             // store image in /images
-            fs.writeFileSync('./images/webcam_frame', buff);
+            fs.writeFileSync('./images/webcam_frame.jpg', buff);
             console.log('******** File created from base64 encoded string ********');  
             
             // create obj with image_data as base64
