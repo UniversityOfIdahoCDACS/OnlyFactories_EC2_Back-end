@@ -5,6 +5,7 @@
 // RUN LISTENER WITH COMMAND 'sudo pm2 start MQTT_Listener.js'
 
 const mqtt = require('mqtt');
+const fs = require('fs');
 const url = 'wss://onlyfactories.duckdns.org:9001';
 let client = mqtt.connect(url);
 const sql = require("./models/db.js");
@@ -215,6 +216,10 @@ client.on('message', function(topic, message){
 
             //when frame received, convert from base 64 to raw binary in buffer
             let buff = Buffer.from(msg.image_data, 'base64');
+
+            // store image in /images
+            fs.writeFileSync('./images/webcam_frame', buff);
+            console.log('******** File created from base64 encoded string ********');  
             
             // create obj with image_data as base64
             let webcamFrame = {

@@ -29,6 +29,8 @@ app.use(allowCrossDomain);
 // Routes for order API and MQTT API
 app.use('/api', factoryRouter);
 app.use('/mqtt', mqttRouter);
+// Route to grab static files
+app.use('/images', express.static('images'));
 
 // simple route
 app.get("/", (req, res) => {
