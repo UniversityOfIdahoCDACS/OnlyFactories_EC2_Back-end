@@ -245,15 +245,6 @@ exports.getWebcamFrame = (req, res) => {
     } else {
       console.log("Data.image_data: ",data.image_data);
 
-
-      //////////////////////////////////////////////////////
-      // Need to figure out how to properly decode Images
-      ////////////////////////////////////////////////////////
-
-
-
-
-
       //const imgData = Buffer(data.image_data, 'base64');
       res.type('jpeg').send(data.image_data);
     }

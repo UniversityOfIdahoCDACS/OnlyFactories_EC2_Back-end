@@ -239,9 +239,22 @@ FactoryOrder.getFactoryOrderID = (result) => {
         }
 
         if(res.length){
-            console.log("Found orderID: ", res[0]);
-            result(null, res[0]);
-            return;
+            sql.query(`SELECT orderID from FactoryJobs WHERE jobID=${res[0]}`, (error, response) => {
+
+                if(error){
+                    console.log("error: ", error);
+                    result(error, null);
+                    return;
+                }
+
+                if(response.length){
+                    console.log("Found orderID: ", response[0]);
+                    result(null, response[0]);
+                    return;
+                }
+
+                result({ kind: "orderID not found"}, null);
+            })
         }
         
         //no orders were found
