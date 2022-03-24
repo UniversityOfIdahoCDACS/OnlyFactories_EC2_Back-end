@@ -230,7 +230,26 @@ FactoryOrder.getMaxJobID = (result) => {
     });
 };
 
-FactoryOrder.getFactoryOrderID = (result) => {
+FactoryOrder.getFactoryOrderID = (jobID,  result) => {
+    sql.query(`SELECT orderID from FactoryJobs WHERE jobID = ${jobID}`, (err,res) => {
+        if (err){
+            console.log("error: ", err);
+            result(err, null);
+            return;
+        }
+
+        if(res.length){
+            console.log("Found orderID: ", res[0]);
+            result(null, res[0]);
+            return;
+        }
+        
+        //no orders were found
+        result({ kind: "orderID not found"}, null);
+    });
+};
+
+FactoryOrder.getFactoryJobID = (result) => {
     sql.query(`SELECT current_job from FactoryStatus`, (err,res) => {
         if (err){
             console.log("error: ", err);
@@ -239,22 +258,9 @@ FactoryOrder.getFactoryOrderID = (result) => {
         }
 
         if(res.length){
-            sql.query(`SELECT orderID from FactoryJobs WHERE jobID=${res[0]}`, (error, response) => {
-
-                if(error){
-                    console.log("error: ", error);
-                    result(error, null);
-                    return;
-                }
-
-                if(response.length){
-                    console.log("Found orderID: ", response[0]);
-                    result(null, response[0]);
-                    return;
-                }
-
-                result({ kind: "orderID not found"}, null);
-            })
+            console.log("Found current_job: ", res[0]);
+            result(null, res[0]);
+            return;
         }
         
         //no orders were found
