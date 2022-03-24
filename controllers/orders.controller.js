@@ -128,7 +128,7 @@ exports.getMaxJobID = (req, res) => {
   });
 }
 
-exports.getFactoryOrderID = (req,res) => {
+exports.getFactoryOrderID = (req, res) => {
   FactoryOrder.getFactoryOrderID(req.params.jobID, (err, data) => {
     if(err){
       if(err.kind === "not_found"){
@@ -149,7 +149,7 @@ exports.getFactoryJobID = (req,res) => {
     if(err){
       if(err.kind === "not_found"){
         res.status(404).send({
-          message: `No order found.`
+          message: `No job found.`
         });
       } else {
         res.status(500).send({
