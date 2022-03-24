@@ -216,7 +216,7 @@ client.on('message', function(topic, message){
 
             //when frame received, convert from base 64 to raw binary in buffer
             let image_slice = msg.image_data.slice(2,-1);
-            let buff = Buffer.from(msg.image_data, 'base64');
+            let buff = Buffer.from(image_slice, 'base64');
 
             // store image in /images
             fs.writeFileSync('./images/webcam_frame.jpg', buff);
