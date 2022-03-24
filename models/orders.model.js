@@ -231,7 +231,7 @@ FactoryOrder.getMaxJobID = (result) => {
 };
 
 FactoryOrder.getFactoryOrderID = (jobID,  result) => {
-    sql.query(`SELECT orderID FROM FactoryJobs WHERE jobID=${jobID}`, (err,res) => {
+    sql.query(`SELECT * FROM FactoryJobs WHERE jobID=${jobID}`, (err,res) => {
         if (err){
             console.log("error: ", err);
             result(err, null);
