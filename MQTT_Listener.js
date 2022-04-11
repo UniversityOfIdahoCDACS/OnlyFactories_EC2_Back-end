@@ -139,7 +139,7 @@ client.on('message', function(topic, message){
                 });
 
                 // if job is in progress, update main order
-                if(msg.job_notice =='In progress'){
+                if(msg.job_notice.toLowerCase() == 'in progress'){
                     // get orderID of job notice
                     sql.query(`SELECT orderID FROM FactoryJobs WHERE jobID = ${jobID}`, (err, res) =>{
                         if (err){
@@ -162,7 +162,7 @@ client.on('message', function(topic, message){
                 }
 
                 // if job status is complete, check if all jobs in order are complete
-                if(msg.job_notice == 'Complete'){
+                if(msg.job_notice.toLowerCase() == 'complete'){
                     // get orderID of job notice
                     sql.query(`SELECT orderID FROM FactoryJobs WHERE jobID = ${jobID}`, (err, res) =>{
                         if (err){
@@ -186,7 +186,7 @@ client.on('message', function(topic, message){
 
                     // iterate through all rows returned by previous query checking for complete status
                     for(let i = 0; i < newRows; i++){
-                        if( jobStatuses[i].jobStatus != 'Complete'){
+                        if( jobStatuses[i].jobStatus.toLowerCase() != 'complete'){
                             allJobsCompleted = false;
                         }
                     }
@@ -219,8 +219,8 @@ client.on('message', function(topic, message){
             let buff = Buffer.from(image_slice, 'base64');
 
             // store image in /images
-            fs.writeFileSync('./images/webcam_frame.jpg', buff);
-            console.log('******** File created from base64 encoded string ********');  
+            //fs.writeFileSync('./images/webcam_frame.jpg', buff);
+            //console.log('******** File created from base64 encoded string ********');  
             
             // create obj with image_data as base64
             let webcamFrame = {
