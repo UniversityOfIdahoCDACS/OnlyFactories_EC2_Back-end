@@ -127,6 +127,8 @@ client.on('message', function(topic, message){
 
                 let jobID = msg.job_id;
                 let jobStatus = msg.job_notice;
+                console.log(jobStatus);
+                
                 let orderID;
                 let jobStatuses;
                 let numRows;
