@@ -117,7 +117,7 @@ client.on('message', function(topic, message){
         //
         if(topic == 'Factory/Job_notice'){
 
-            /*
+            
 
             if(msg.msg_type == 'error'){
                 // nothing for now
@@ -143,12 +143,15 @@ client.on('message', function(topic, message){
                 // if job is in progress, update main order
                 if(msg.job_notice == 'in progress' || msg.job_notice == 'In progress' || msg.job_notice == 'In Progress'){
                     // get orderID of job notice
+                    console.log("SELECT orderID FROM FactoryJobs WHERE jobID");
+
                     sql.query(`SELECT orderID FROM FactoryJobs WHERE jobID = ${jobID}`, (err, res) =>{
                         if (err){
                             console.log("error: ",err);
                         }
 
                         orderID = res[0].orderID;
+                        console.log("\tJOB NOTICE GET orderID: ", orderID);
                     });
 
                     let updateOrder = {
@@ -156,6 +159,7 @@ client.on('message', function(topic, message){
                         updated_at: getTimestamp()
                     };
 
+                    console.log("UPDATE FactoryOrders SET ? WHERE orderID=");
                     sql.query(`UPDATE FactoryOrders SET ? WHERE orderID=${orderID}`, updateOrder, (err, res) =>{
                         if (err){
                             console.log("error: ", err);
@@ -165,6 +169,7 @@ client.on('message', function(topic, message){
 
                 // if job status is complete, check if all jobs in order are complete
                 if(msg.job_notice == 'complete' || msg.job_notice == 'Complete'){
+                    console.log("SELECT orderID FROM FactoryJobs WHERE jobID");
                     // get orderID of job notice
                     sql.query(`SELECT orderID FROM FactoryJobs WHERE jobID = ${jobID}`, (err, res) =>{
                         if (err){
@@ -172,8 +177,10 @@ client.on('message', function(topic, message){
                         }
 
                         orderID = res[0].orderID;
+                        console.log("\tJOB NOTICE GET orderID: ", orderID);
                     });
 
+                    console.log("SELECT jobStatus FROM FactoryJobs WHERE orderID=");
                     // get jobStatuses for matching orderID
                     sql.query(`SELECT jobStatus FROM FactoryJobs WHERE orderID=${orderID}`, (err, res) =>{
                         if (err){
@@ -182,6 +189,7 @@ client.on('message', function(topic, message){
 
                         numRows = res.length;
                         jobStatuses = res;
+                        console.log("\tJOB STATUS GET jobStatus: ", jobStatuses[0]);
                     });                
 
                     let allJobsCompleted = true;
@@ -201,6 +209,7 @@ client.on('message', function(topic, message){
                             updated_at: getTimestamp()
                         };
 
+                        console.log("UPDATE FactoryOrders SET ? WHERE orderID=");
                         sql.query(`UPDATE FactoryOrders SET ? WHERE orderID=${orderID}`, updateOrder, (err, res) =>{
                             if (err){
                                 console.log("error: ", err);
@@ -209,7 +218,6 @@ client.on('message', function(topic, message){
                     }
                 }
             }
-            */
         }
 
         //
