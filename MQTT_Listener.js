@@ -117,6 +117,8 @@ client.on('message', function(topic, message){
         //
         if(topic == 'Factory/Job_notice'){
 
+            /*
+
             if(msg.msg_type == 'error'){
                 // nothing for now
             }
@@ -207,6 +209,7 @@ client.on('message', function(topic, message){
                     }
                 }
             }
+            */
         }
 
         //
