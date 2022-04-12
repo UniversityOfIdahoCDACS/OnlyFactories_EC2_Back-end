@@ -125,12 +125,8 @@ client.on('message', function(topic, message){
             else{
                 console.log("Job Notice received")
 
-                console.log(msg);
-
                 let jobID = msg.job_id;
-                let jobStatus = msg.job_notice;
-                console.log(jobStatus);
-
+                let jobStatus = msg.message;
                 let orderID;
                 let jobStatuses;
                 let numRows;
