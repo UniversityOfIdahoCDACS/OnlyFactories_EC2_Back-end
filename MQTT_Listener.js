@@ -132,7 +132,7 @@ client.on('message', function(topic, message){
                 let numRows;
 
                 // update the jobStatus for specified jobID
-                sql.query(`UPDATE FactoryJobs SET jobStatus=${jobStatus} WHERE jobID = ${jobID}`, (err, res) =>{
+                sql.query(`UPDATE FactoryJobs SET jobStatus=\"${jobStatus}\" WHERE jobID = ${jobID}`, (err, res) =>{
                     if (err){
                         console.log("error: ", err);
                     }
