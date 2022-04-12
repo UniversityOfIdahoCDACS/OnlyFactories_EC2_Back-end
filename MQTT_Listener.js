@@ -141,7 +141,7 @@ client.on('message', function(topic, message){
                 });
 
                 // if job is in progress, update main order
-                if(msg.job_notice == 'in progress' || msg.job_notice == 'In progress' || msg.job_notice == 'In Progress'){
+                if(jobStatus == 'in progress' || jobStatus == 'In progress' || jobStatus == 'In Progress'){
                     // get orderID of job notice
                     console.log("SELECT orderID FROM FactoryJobs WHERE jobID");
 
@@ -168,7 +168,7 @@ client.on('message', function(topic, message){
                 }
 
                 // if job status is complete, check if all jobs in order are complete
-                if(msg.job_notice == 'complete' || msg.job_notice == 'Complete'){
+                if(jobStatus == 'complete' || jobStatus == 'Complete'){
                     console.log("SELECT orderID FROM FactoryJobs WHERE jobID");
                     // get orderID of job notice
                     sql.query(`SELECT orderID FROM FactoryJobs WHERE jobID = ${jobID}`, (err, res) =>{
