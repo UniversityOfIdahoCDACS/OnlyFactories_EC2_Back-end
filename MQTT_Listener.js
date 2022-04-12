@@ -41,8 +41,8 @@ client.on('message', function(topic, message){
 
     //if ordar status message is received
     if(topic == 'Factory/Echo'){
-        console.log("Echo message Received")
-        console.log(message)
+            console.log("Echo message Received")
+        //console.log(message)
     }
     else{
         var msg = JSON.parse(message);
@@ -125,10 +125,12 @@ client.on('message', function(topic, message){
             else{
                 console.log("Job Notice received")
 
+                console.log(msg);
+
                 let jobID = msg.job_id;
                 let jobStatus = msg.job_notice;
                 console.log(jobStatus);
-                
+
                 let orderID;
                 let jobStatuses;
                 let numRows;
