@@ -140,6 +140,9 @@ client.on('message', function(topic, message){
                     console.log(`JobID ${jobID} Status updated`);
                 });
 
+                console.log("BEFORE In Progress CHECK");
+                console.log("jobStatus: ", jobStatus);
+
                 // if job is in progress, update main order
                 if(jobStatus == 'in progress' || jobStatus == 'In progress' || jobStatus == 'In Progress'){
                     // get orderID of job notice
@@ -167,6 +170,8 @@ client.on('message', function(topic, message){
                     });
                 }
 
+                console.log("BEFORE Complete CHECK")
+                console.log("jobStatus: ", jobStatus);
                 // if job status is complete, check if all jobs in order are complete
                 if(jobStatus == 'complete' || jobStatus == 'Complete'){
                     console.log("SELECT orderID FROM FactoryJobs WHERE jobID");
