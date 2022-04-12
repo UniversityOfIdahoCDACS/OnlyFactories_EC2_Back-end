@@ -45,7 +45,7 @@ FactoryOrder.findById = (id, result) => {
         }
 
         if (res.length){
-            console.log("found Order: ", res[0]);
+            //console.log("found Order: ", res[0]);
             result(null, res[0]);
             return;
         }
@@ -76,7 +76,7 @@ FactoryOrder.orderQuantities = (dataRange, result) => {
         }
 
         if(res.length){
-            console.log("Found order quantities");
+            //console.log("Found order quantities");
             result(null, res);
             return;
         }
@@ -122,7 +122,7 @@ FactoryOrder.getDaysQ = (day, result) => {
         }
 
         if (res.length){
-            console.log("7 Days Found.");
+            //console.log("7 Days Found.");
             result(null, res);
             return;
         }
@@ -145,7 +145,7 @@ LogIn.checkLogin = (data, result) => {
         }
 
         if (res.length){
-            console.log("UserName:", user, "\nPassword:" , pass);
+            //console.log("UserName:", user, "\nPassword:" , pass);
             result(null, res);
             return;
         }
@@ -164,7 +164,7 @@ ItemPrice.checkPrice = (result) => {
         }
 
         if (res.length){
-            console.log("Prices Found");
+            //console.log("Prices Found");
             result(null, res);
             return;
         }
@@ -183,7 +183,7 @@ FactoryOrder.getMaxOrderID = (result) => {
         }
 
         if(res.length){
-            console.log("Found Max OrderID: ", res[0]);
+            //console.log("Found Max OrderID: ", res[0]);
             result(null, res[0]);
             return;
         }
@@ -201,7 +201,7 @@ FactoryOrder.getMaxTransactionID = (result) => {
         }
 
         if(res.length){
-            console.log("Found Max TransactionID: ", res[0]);
+            //console.log("Found Max TransactionID: ", res[0]);
             result(null, res[0]);
             return;
         }
@@ -220,7 +220,7 @@ FactoryOrder.getMaxJobID = (result) => {
         }
 
         if(res.length){
-            console.log("Found Max JobID: ", res[0]);
+            //console.log("Found Max JobID: ", res[0]);
             result(null, res[0]);
             return;
         }
@@ -239,7 +239,7 @@ FactoryOrder.getFactoryOrderID = (jobID,  result) => {
         }
 
         if(res.length){
-            console.log("Found orderID: ", res[0]);
+            //console.log("Found orderID: ", res[0]);
             result(null, res[0]);
             return;
         }
@@ -252,13 +252,13 @@ FactoryOrder.getFactoryOrderID = (jobID,  result) => {
 FactoryOrder.getFactoryJobID = (result) => {
     sql.query(`SELECT current_job from FactoryStatus`, (err,res) => {
         if (err){
-            console.log("error: ", err);
+            //console.log("error: ", err);
             result(err, null);
             return;
         }
 
         if(res.length){
-            console.log("Found current_job: ", res[0]);
+            //console.log("Found current_job: ", res[0]);
             result(null, res[0]);
             return;
         }
@@ -277,7 +277,7 @@ FactoryOrder.getPrices = (result) => {
         }
 
         if(res.length){
-            console.log("Found Max TransactionID: ", res);
+            //console.log("Found Max TransactionID: ", res);
             result(null, res);
             return;
         }
@@ -295,7 +295,7 @@ FactoryOrder.createOrder = (newFactoryOrder, result) =>{
             return;
         }
 
-        console.log("Created order: ", {id: res.orderID, ...newFactoryOrder});
+        //console.log("Created order: ", {id: res.orderID, ...newFactoryOrder});
         result(null, { id: res.orderID, ...newFactoryOrder });
 
     });
@@ -309,7 +309,7 @@ FactoryTransaction.createTransaction = (newFactoryTransaction, result) =>{
             return;
         }
 
-        console.log("Created transaction: ", {id: res.orderID, ...newFactoryTransaction});
+        //("Created transaction: ", {id: res.orderID, ...newFactoryTransaction});
         result(null, { id: res.orderID, ...newFactoryTransaction });
 
     });

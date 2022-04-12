@@ -230,7 +230,7 @@ exports.createTransaction = (req, res) => {
       orderTotal: req.body.orderTotal
   });
 
-  console.log(factorytransaction);
+  //console.log(factorytransaction);
 
   //Save FactoryOrder in database
   FactoryTransaction.createTransaction(factorytransaction, (err, data) => {
@@ -259,7 +259,7 @@ exports.getWebcamFrame = (req, res) => {
         });
       }
     } else {
-      console.log("Data.image_data: ",data.image_data);
+      console.log("Data.image_data: ", data.image_data);
 
       //const imgData = Buffer(data.image_data, 'base64');
       res.type('jpeg').send(data.image_data);
