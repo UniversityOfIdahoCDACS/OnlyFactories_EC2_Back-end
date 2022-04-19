@@ -124,11 +124,11 @@ client.on('message', function(topic, message){
                 console.log("Job Notice received")
                 console.log("====> ", msg);
 
-                let jobID = msg.job_id;
-                let jobStatus = msg.message;
-                let orderID;
-                let jobStatuses;
-                let numRows;
+                var jobID = msg.job_id;
+                var jobStatus = msg.message;
+                var orderID;
+                var jobStatuses;
+                var numRows;
 
                 // update the jobStatus for specified jobID
                 sql.query(`UPDATE FactoryJobs SET jobStatus=\"${jobStatus}\" WHERE jobID = ${jobID}`, (err, res) =>{
