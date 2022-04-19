@@ -122,10 +122,11 @@ client.on('message', function(topic, message){
             }
             else{
                 console.log("Job Notice received")
-                console.log("====> ", msg);
 
                 var jobID = msg.job_id;
+                console.log("Line 127, jobID: ", jobID);
                 var jobStatus = msg.message;
+                console.log("Line 129, jobStatus: ", jobStatus);
                 var orderID;
                 var jobStatuses;
                 var numRows;
