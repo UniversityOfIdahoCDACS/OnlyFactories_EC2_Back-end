@@ -151,7 +151,8 @@ client.on('message', function(topic, message){
                         if (err){
                             console.log("error: ",err);
                         }
-
+                        console.log("Line 154, res: ", res)
+                        console.log("Line 155, res[0].orderID: ", res[0].orderID);
                         orderID = res[0].orderID;
                         //console.log("\tJOB NOTICE GET orderID: ", orderID);
                     });
@@ -162,6 +163,9 @@ client.on('message', function(topic, message){
                     };
 
                     //console.log("UPDATE FactoryOrders SET ? WHERE orderID=");
+
+                    console.log("Line 167, OrderID: ", orderID);
+                    
                     sql.query(`UPDATE FactoryOrders SET ? WHERE orderID=${orderID}`, updateOrder, (err, res) =>{
                         if (err){
                             console.log("error: ", err);
@@ -219,7 +223,7 @@ client.on('message', function(topic, message){
                             orderStatus: 'Complete',
                             updated_at: getTimestamp()
                         };
-
+                        
                         console.log("UPDATE FactoryOrders SET ? WHERE orderID=");
                         sql.query(`UPDATE FactoryOrders SET ? WHERE orderID=${orderID}`, updateOrder, (err, res) =>{
                             if (err){
