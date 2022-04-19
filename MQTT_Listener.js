@@ -199,7 +199,7 @@ client.on('message', function(topic, message){
                     let allJobsCompleted = true;
 
                     // iterate through all rows returned by previous query checking for complete status
-                    for(let i = 0; i < newRows; i++){
+                    for(let i = 0; i < numRows; i++){
                         if( jobStatuses[i].jobStatus != 'complete' || jobStatuses[i].jobStatus != 'Complete'){
                             allJobsCompleted = false;
                         }
