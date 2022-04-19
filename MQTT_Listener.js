@@ -143,7 +143,7 @@ client.on('message', function(topic, message){
                 console.log("jobStatus: ", jobStatus);
 
                 // if job is in progress, update main order
-                if(jobStatus == 'in progress' || jobStatus == 'In progress' || jobStatus == 'In Progress'){
+                if(jobStatus == 'in progress' || jobStatus == 'In progress' || jobStatus == 'In Progress' || jobStatus == 'Started' || jobStatus == 'started'){
                     // get orderID of job notice
                     console.log("SELECT orderID FROM FactoryJobs WHERE jobID");
 
