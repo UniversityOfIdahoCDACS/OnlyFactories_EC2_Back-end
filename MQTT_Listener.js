@@ -196,7 +196,7 @@ client.on('message', function(topic, message){
                             numRows = res.length;
                         }
                         else{
-                            numRows = 
+                            numRows = 0;
                         }
                         
                         jobStatuses = res;
