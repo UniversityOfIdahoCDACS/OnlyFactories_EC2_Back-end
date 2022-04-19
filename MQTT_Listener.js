@@ -9,6 +9,7 @@ const fs = require('fs');
 const url = 'wss://onlyfactories.duckdns.org:9001';
 let client = mqtt.connect(url);
 const sql = require("./models/db.js");
+const { resolve } = require('path');
 
 client.on('connect', function(){
     client.subscribe('Factory/Echo');                           // test topic that will echo back a message
@@ -217,7 +218,13 @@ async function RunJobNotice(msg){
             console.log("--->SELECT jobStatus FROM FactoryJobs WHERE orderID=" ,orderID);
             // get jobStatuses for matching orderID
                      
-            await GetJobStatuses(orderID, numRows, jobStatuses);
+            try{
+                jobStatuses = await GetJobStatuses(orderID, numRows, jobStatuses);
+            }
+            catch(error){
+                //nothing for now;
+            }
+            
             let allJobsCompleted = true;
 
             // iterate through all rows returned by previous query checking for complete status
@@ -246,33 +253,24 @@ async function RunJobNotice(msg){
     }
 }
 
-async function GetOrderID(jobID){
-    await sql.query(`SELECT orderID FROM FactoryJobs WHERE jobID = ${jobID}`, (err, res) =>{
-        if (err){
-            console.log("error: ",err);
-        }
-        console.log("Line 154, res: ", res)
-        console.log("Line 155, res[0].orderID: ", res[0].orderID);
-
-        return res[0].orderID;
-        //console.log("\tJOB NOTICE GET orderID: ", orderID);
-    });
+function GetOrderID(jobID){
+    return new Promise((resolve, reject) => {
+        sql.query(`SELECT orderID FROM FactoryJobs WHERE jobID = ${jobID}`, (err, res) =>{
+            if (err){
+                return reject(err);
+            }
+            resolve(res[0].orderID);
+        });
+    })
 }
 
-async function GetJobStatuses(orderID, numRows, jobStatuses){
-    await sql.query(`SELECT jobStatus FROM FactoryJobs WHERE orderID=${orderID}`, (err, res) =>{
-        if (err){
-            console.log("error: ",err);
-        }
-        
-        if(res.length){
-            numRows = res.length;
-        }
-        else{
-            numRows = 0;
-        }
-        
-        jobStatuses = res;
-        console.log("\tJOB STATUS GET jobStatus: ", jobStatuses[0]);
-    });      
+function GetJobStatuses(orderID, numRows, jobStatuses){
+    return new Promise((resolve, reject) => {
+        sql.query(`SELECT jobStatus FROM FactoryJobs WHERE orderID=${orderID}`, (err, res) =>{
+            if (err){
+                return reject(err)
+            }
+            resolve(res);
+        });
+    })
 }
