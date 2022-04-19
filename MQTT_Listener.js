@@ -172,7 +172,7 @@ client.on('message', function(topic, message){
                 console.log("BEFORE Complete CHECK")
                 console.log("jobStatus: ", jobStatus);
                 // if job status is complete, check if all jobs in order are complete
-                if(jobStatus == 'completed' || jobStatus == 'Completed'){
+                if(jobStatus == 'completed' || jobStatus == 'Completed' || jobStatus == 'complete' || jobStatus == 'Complete'){
                     console.log("SELECT orderID FROM FactoryJobs WHERE jobID");
                     // get orderID of job notice
                     sql.query(`SELECT orderID FROM FactoryJobs WHERE jobID = ${jobID}`, (err, res) =>{
