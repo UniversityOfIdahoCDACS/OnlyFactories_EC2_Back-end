@@ -115,15 +115,14 @@ client.on('message', function(topic, message){
         //
         // IF JOB STATUS NOTICE MESSAGE IS RECEIVED
         //
-        if(topic == 'Factory/Job_notice'){
-
-            
+        if(topic == 'Factory/Job_notice'){           
 
             if(msg.msg_type == 'error'){
                 // nothing for now
             }
             else{
                 console.log("Job Notice received")
+                console.log("====> ", msg);
 
                 let jobID = msg.job_id;
                 let jobStatus = msg.message;
@@ -173,7 +172,7 @@ client.on('message', function(topic, message){
                 console.log("BEFORE Complete CHECK")
                 console.log("jobStatus: ", jobStatus);
                 // if job status is complete, check if all jobs in order are complete
-                if(jobStatus == 'complete' || jobStatus == 'Complete'){
+                if(jobStatus == 'completed' || jobStatus == 'Completed'){
                     console.log("SELECT orderID FROM FactoryJobs WHERE jobID");
                     // get orderID of job notice
                     sql.query(`SELECT orderID FROM FactoryJobs WHERE jobID = ${jobID}`, (err, res) =>{
