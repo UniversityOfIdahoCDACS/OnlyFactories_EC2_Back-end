@@ -108,7 +108,7 @@ client.on('message', function(topic, message){
                     console.log("error: ", err);
                 }
         
-                console.log("Factory Status updated: ", {factory_status: res.factory_status, ...factoryStatusDetails});
+                //console.log("Factory Status updated: ", {factory_status: res.factory_status, ...factoryStatusDetails});
             });
         }
 
