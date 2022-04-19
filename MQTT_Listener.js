@@ -148,15 +148,8 @@ client.on('message', function(topic, message){
                     // get orderID of job notice
                     console.log("INSIDE In Progress Scope");
 
-                    sql.query(`SELECT orderID FROM FactoryJobs WHERE jobID = ${jobID}`, (err, res) =>{
-                        if (err){
-                            console.log("error: ",err);
-                        }
-                        console.log("Line 154, res: ", res)
-                        console.log("Line 155, res[0].orderID: ", res[0].orderID);
-                        orderID = res[0].orderID;
-                        //console.log("\tJOB NOTICE GET orderID: ", orderID);
-                    });
+                    // new helper function to get orderID
+                    orderID = GetOrderID(jobID);
 
                     let updateOrder = {
                         orderStatus: 'In progress',
@@ -180,34 +173,14 @@ client.on('message', function(topic, message){
                 if(jobStatus == 'completed' || jobStatus == 'Completed' || jobStatus == 'complete' || jobStatus == 'Complete'){
                     console.log("INSIDE Completed Scope");
                     // get orderID of job notice
-                    sql.query(`SELECT orderID FROM FactoryJobs WHERE jobID = ${jobID}`, (err, res) =>{
-                        if (err){
-                            console.log("error: ",err);
-                        }
-
-                        orderID = res[0].orderID;
-                        //console.log("\tJOB NOTICE GET orderID: ", orderID);
-                    });
                     
+                    // new helper function to get orderID
+                    orderID = GetOrderID(jobID);
 
                     console.log("--->SELECT jobStatus FROM FactoryJobs WHERE orderID=" ,orderID);
                     // get jobStatuses for matching orderID
-                    sql.query(`SELECT jobStatus FROM FactoryJobs WHERE orderID=${orderID}`, (err, res) =>{
-                        if (err){
-                            console.log("error: ",err);
-                        }
-                        
-                        if(res.length){
-                            numRows = res.length;
-                        }
-                        else{
-                            numRows = 0;
-                        }
-                        
-                        jobStatuses = res;
-                        console.log("\tJOB STATUS GET jobStatus: ", jobStatuses[0]);
-                    });                
-
+                             
+                    GetJobStatuses(orderID, numRows, jobStatuses);
                     let allJobsCompleted = true;
 
                     // iterate through all rows returned by previous query checking for complete status
@@ -267,3 +240,34 @@ client.on('message', function(topic, message){
         }
     }
 });
+
+async function GetOrderID(jobID){
+    await sql.query(`SELECT orderID FROM FactoryJobs WHERE jobID = ${jobID}`, (err, res) =>{
+        if (err){
+            console.log("error: ",err);
+        }
+        console.log("Line 154, res: ", res)
+        console.log("Line 155, res[0].orderID: ", res[0].orderID);
+
+        return res[0].orderID;
+        //console.log("\tJOB NOTICE GET orderID: ", orderID);
+    });
+}
+
+async function GetJobStatuses(orderID, numRows, jobStatuses){
+    await sql.query(`SELECT jobStatus FROM FactoryJobs WHERE orderID=${orderID}`, (err, res) =>{
+        if (err){
+            console.log("error: ",err);
+        }
+        
+        if(res.length){
+            numRows = res.length;
+        }
+        else{
+            numRows = 0;
+        }
+        
+        jobStatuses = res;
+        console.log("\tJOB STATUS GET jobStatus: ", jobStatuses[0]);
+    });      
+}
