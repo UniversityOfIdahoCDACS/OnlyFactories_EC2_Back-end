@@ -9,6 +9,7 @@ const fs = require('fs');
 const url = 'wss://onlyfactories.duckdns.org:9001';
 let client = mqtt.connect(url);
 const sql = require("./models/db.js");
+const { resolve } = require('path');
 
 client.on('connect', function(){
     client.subscribe('Factory/Echo');                           // test topic that will echo back a message
@@ -115,125 +116,10 @@ client.on('message', function(topic, message){
         //
         // IF JOB STATUS NOTICE MESSAGE IS RECEIVED
         //
-        if(topic == 'Factory/Job_notice'){           
-
-            if(msg.msg_type == 'error'){
-                // nothing for now
-            }
-            else{
-                console.log("Job Notice received")
-
-                var jobID = msg.job_id;
-                console.log("Line 127, jobID: ", jobID);
-                var jobStatus = msg.message;
-                console.log("Line 129, jobStatus: ", jobStatus);
-                var orderID;
-                var jobStatuses;
-                var numRows;
-
-                // update the jobStatus for specified jobID
-                sql.query(`UPDATE FactoryJobs SET jobStatus=\"${jobStatus}\" WHERE jobID = ${jobID}`, (err, res) =>{
-                    if (err){
-                        console.log("error: ", err);
-                    }
+        if(topic == 'Factory/Job_notice'){
             
-                    console.log(`JobID ${jobID} Status updated`);
-                });
+            RunJobNotice(msg);
 
-                console.log("BEFORE In Progress CHECK");
-                //console.log("jobStatus: ", jobStatus);
-
-                // if job is in progress, update main order
-                if(jobStatus == 'in progress' || jobStatus == 'In progress' || jobStatus == 'In Progress' || jobStatus == 'Started' || jobStatus == 'started'){
-                    // get orderID of job notice
-                    console.log("INSIDE In Progress Scope");
-
-                    sql.query(`SELECT orderID FROM FactoryJobs WHERE jobID = ${jobID}`, (err, res) =>{
-                        if (err){
-                            console.log("error: ",err);
-                        }
-                        console.log("Line 154, res: ", res)
-                        console.log("Line 155, res[0].orderID: ", res[0].orderID);
-                        orderID = res[0].orderID;
-                        //console.log("\tJOB NOTICE GET orderID: ", orderID);
-                    });
-
-                    let updateOrder = {
-                        orderStatus: 'In progress',
-                        updated_at: getTimestamp()
-                    };
-
-                    //console.log("UPDATE FactoryOrders SET ? WHERE orderID=");
-
-                    console.log("Line 167, OrderID: ", orderID);
-                    
-                    sql.query(`UPDATE FactoryOrders SET ? WHERE orderID=${orderID}`, updateOrder, (err, res) =>{
-                        if (err){
-                            console.log("error: ", err);
-                        }
-                    });
-                }
-
-                console.log("BEFORE Complete CHECK")
-                //console.log("jobStatus: ", jobStatus);
-                // if job status is complete, check if all jobs in order are complete
-                if(jobStatus == 'completed' || jobStatus == 'Completed' || jobStatus == 'complete' || jobStatus == 'Complete'){
-                    console.log("INSIDE Completed Scope");
-                    // get orderID of job notice
-                    sql.query(`SELECT orderID FROM FactoryJobs WHERE jobID = ${jobID}`, (err, res) =>{
-                        if (err){
-                            console.log("error: ",err);
-                        }
-
-                        orderID = res[0].orderID;
-                        //console.log("\tJOB NOTICE GET orderID: ", orderID);
-                    });
-                    
-
-                    console.log("--->SELECT jobStatus FROM FactoryJobs WHERE orderID=" ,orderID);
-                    // get jobStatuses for matching orderID
-                    sql.query(`SELECT jobStatus FROM FactoryJobs WHERE orderID=${orderID}`, (err, res) =>{
-                        if (err){
-                            console.log("error: ",err);
-                        }
-                        
-                        if(res.length){
-                            numRows = res.length;
-                        }
-                        else{
-                            numRows = 0;
-                        }
-                        
-                        jobStatuses = res;
-                        console.log("\tJOB STATUS GET jobStatus: ", jobStatuses[0]);
-                    });                
-
-                    let allJobsCompleted = true;
-
-                    // iterate through all rows returned by previous query checking for complete status
-                    for(let i = 0; i < numRows; i++){
-                        if( jobStatuses[i].jobStatus != 'complete' || jobStatuses[i].jobStatus != 'Complete' || jobStatuses[i].jobStatus != 'completed' || jobStatuses[i].jobStatus != 'Completed'){
-                            allJobsCompleted = false;
-                        }
-                    }
-
-                    // if all jobs in order are complete, mark order complete
-                    if(allJobsCompleted){
-
-                        let updateOrder = {
-                            orderStatus: 'Complete',
-                            updated_at: getTimestamp()
-                        };
-                        
-                        console.log("UPDATE FactoryOrders SET ? WHERE orderID=");
-                        sql.query(`UPDATE FactoryOrders SET ? WHERE orderID=${orderID}`, updateOrder, (err, res) =>{
-                            if (err){
-                                console.log("error: ", err);
-                            }
-                        });
-                    }
-                }
-            }
         }
 
         //
@@ -267,3 +153,124 @@ client.on('message', function(topic, message){
         }
     }
 });
+
+async function RunJobNotice(msg){
+    if(msg.msg_type == 'error'){
+        // nothing for now
+    }
+    else{
+        console.log("Job Notice received")
+
+        var jobID = msg.job_id;
+        console.log("Line 127, jobID: ", jobID);
+        var jobStatus = msg.message;
+        console.log("Line 129, jobStatus: ", jobStatus);
+        var orderID;
+        var jobStatuses;
+        var numRows;
+
+        // update the jobStatus for specified jobID
+        sql.query(`UPDATE FactoryJobs SET jobStatus=\"${jobStatus}\" WHERE jobID = ${jobID}`, (err, res) =>{
+            if (err){
+                console.log("error: ", err);
+            }
+    
+            console.log(`JobID ${jobID} Status updated`);
+        });
+
+        console.log("BEFORE In Progress CHECK");
+        //console.log("jobStatus: ", jobStatus);
+
+        // if job is in progress, update main order
+        if(jobStatus == 'in progress' || jobStatus == 'In progress' || jobStatus == 'In Progress' || jobStatus == 'Started' || jobStatus == 'started'){
+            // get orderID of job notice
+            console.log("INSIDE In Progress Scope");
+
+            // new helper function to get orderID
+            orderID = await GetOrderID(jobID);
+
+            let updateOrder = {
+                orderStatus: 'In progress',
+                updated_at: getTimestamp()
+            };
+
+            //console.log("UPDATE FactoryOrders SET ? WHERE orderID=");
+
+            console.log("Line 167, OrderID: ", orderID);
+            
+            sql.query(`UPDATE FactoryOrders SET ? WHERE orderID=${orderID}`, updateOrder, (err, res) =>{
+                if (err){
+                    console.log("error: ", err);
+                }
+            });
+        }
+
+        console.log("BEFORE Complete CHECK")
+        //console.log("jobStatus: ", jobStatus);
+        // if job status is complete, check if all jobs in order are complete
+        if(jobStatus == 'completed' || jobStatus == 'Completed' || jobStatus == 'complete' || jobStatus == 'Complete'){
+            console.log("INSIDE Completed Scope");
+            // get orderID of job notice
+            
+            // new helper function to get orderID
+            orderID = await GetOrderID(jobID);
+
+            console.log("--->SELECT jobStatus FROM FactoryJobs WHERE orderID=" ,orderID);
+            // get jobStatuses for matching orderID
+                     
+            try{
+                jobStatuses = await GetJobStatuses(orderID, numRows, jobStatuses);
+            }
+            catch(error){
+                //nothing for now;
+            }
+            
+            let allJobsCompleted = true;
+
+            // iterate through all rows returned by previous query checking for complete status
+            for(let i = 0; i < numRows; i++){
+                if( jobStatuses[i].jobStatus != 'complete' || jobStatuses[i].jobStatus != 'Complete' || jobStatuses[i].jobStatus != 'completed' || jobStatuses[i].jobStatus != 'Completed'){
+                    allJobsCompleted = false;
+                }
+            }
+
+            // if all jobs in order are complete, mark order complete
+            if(allJobsCompleted){
+
+                let updateOrder = {
+                    orderStatus: 'Complete',
+                    updated_at: getTimestamp()
+                };
+                
+                console.log("UPDATE FactoryOrders SET ? WHERE orderID=");
+                sql.query(`UPDATE FactoryOrders SET ? WHERE orderID=${orderID}`, updateOrder, (err, res) =>{
+                    if (err){
+                        console.log("error: ", err);
+                    }
+                });
+            }
+        }
+    }
+}
+
+function GetOrderID(jobID){
+    return new Promise((resolve, reject) => {
+        sql.query(`SELECT orderID FROM FactoryJobs WHERE jobID = ${jobID}`, (err, res) =>{
+            if (err){
+                return reject(err);
+            }
+            resolve(res[0].orderID);
+        });
+    })
+}
+
+function GetJobStatuses(orderID, numRows, jobStatuses){
+    return new Promise((resolve, reject) => {
+        sql.query(`SELECT jobStatus FROM FactoryJobs WHERE orderID=${orderID}`, (err, res) =>{
+            if (err){
+                return reject(err)
+            }
+            resolve(res);
+        });
+    })
+}
