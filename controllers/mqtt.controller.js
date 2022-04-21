@@ -87,14 +87,9 @@ exports.cancelByOrderId = (req, res) => {
 }
 
 exports.sendInventoryRefresh = (req, res) => {
-  MQTT_Task.sendInventoryRefresh((err, data) => {
-    if (err) {
-      if (err.kind === "fail"){
-        res.status(500).send({
-          message: "Error sending message"
-        });
-      }
-    }
-    else res.send(data);
+  MQTT_Msg.sendInventoryRefresh((err, data) => {
+    
+    res.send(data);
+    
   });
 }
