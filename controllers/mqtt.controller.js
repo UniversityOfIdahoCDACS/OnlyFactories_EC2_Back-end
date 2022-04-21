@@ -85,3 +85,16 @@ exports.cancelByOrderId = (req, res) => {
     } else res.send(data);
   });
 }
+
+exports.sendInventoryRefresh = (req, res) => {
+  MQTT_Task.sendInventoryRefresh((err, data) => {
+    if (err) {
+      if (err.kind === "fail"){
+        res.status(500).send({
+          message: "Error sending message"
+        });
+      }
+    }
+    else res.send(data);
+  });
+}

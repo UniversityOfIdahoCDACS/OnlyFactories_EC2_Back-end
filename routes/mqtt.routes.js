@@ -21,4 +21,7 @@ router.get('/cancelByJobId', mqtt.cancelByJobId);
 // Cancel job by Order ID
 router.get('/cancelByOrderId', mqtt.cancelByOrderId);
 
+// send inventory refresh
+router.get('/sendInventoryRefresh', mqtt.sendInventoryRefresh);
+
 module.exports = router
