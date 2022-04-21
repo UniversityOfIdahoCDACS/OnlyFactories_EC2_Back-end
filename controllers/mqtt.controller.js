@@ -85,3 +85,11 @@ exports.cancelByOrderId = (req, res) => {
     } else res.send(data);
   });
 }
+
+exports.sendInventoryRefresh = (req, res) => {
+  MQTT_Msg.sendInventoryRefresh((err, data) => {
+    
+    res.send(data);
+    
+  });
+}
