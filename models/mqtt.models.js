@@ -60,18 +60,19 @@ MQTT_Task.cancelByOrderId = (orderID,result) => {
    
 };
 
-MQTT_Task.sendInventoryRefresh = (result) => {
+MQTT_Task.sendInventoryRefresh = (data, result) => {
 
     let client = mqtt.connect(url);
-    const payload = {
-        msg_type = reset_inventory
+    const msg = {
+        msg_type: "reset_inventory"
     }
+    const payload = JSON.stringify(msg);
 
     client.on("connect", function(){        
         client.publish('UofICapstone_Cloud', payload, qos=2);
     })
 
-    result(payload);
+    result(null, payload);
 }
 
 module.exports = {MQTT_Task, MQTT_Msg};
