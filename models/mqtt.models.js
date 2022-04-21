@@ -60,7 +60,7 @@ MQTT_Task.cancelByOrderId = (orderID,result) => {
    
 };
 
-MQTT_Msg.sendInventoryRefresh = (data, result) => {
+MQTT_Msg.sendInventoryRefresh = result => {
 
     let client = mqtt.connect(url);
     const msg = {
